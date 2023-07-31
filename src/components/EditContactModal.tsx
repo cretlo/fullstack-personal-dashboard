@@ -4,17 +4,10 @@ import { Contact as ContactType } from "../types";
 
 type Props = {
   contact: ContactType;
-  type: "add" | "edit";
   handleEditContact: (contact: ContactType) => void;
-  handleAddContact: (contact: ContactType) => void;
 };
 
-const ContactModal = ({
-  contact,
-  type,
-  handleEditContact,
-  handleAddContact,
-}: Props) => {
+const EditContactModal = ({ contact, handleEditContact }: Props) => {
   const [show, setShow] = useState(false);
   const [name, setName] = useState(contact.name);
   const [phone, setPhone] = useState(contact.phone);
@@ -32,8 +25,7 @@ const ContactModal = ({
       email: email,
     };
 
-    type === "add" ? handleAddContact(nextContact) : null;
-    type === "edit" ? handleEditContact(nextContact) : null;
+    handleEditContact(nextContact);
 
     handleClose();
   };
@@ -43,9 +35,8 @@ const ContactModal = ({
       <button type="button" className="btn btn-secondary" onClick={handleShow}>
         Edit
       </button>
-
       <Modal show={show} onHide={handleClose} backdrop="static">
-        <Modal.Header>{type === "add" ? "Add" : "Edit"} Contact</Modal.Header>
+        <Modal.Header>Edit Contact</Modal.Header>
         <Modal.Body>
           <div>
             <label>Name</label>
@@ -81,7 +72,7 @@ const ContactModal = ({
             className="btn btn-primary"
             onClick={handleSave}
           >
-            {type === "add" ? "Add" : "Save"}
+            Save
           </button>
           <button
             type="button"
@@ -96,4 +87,4 @@ const ContactModal = ({
   );
 };
 
-export default ContactModal;
+export default EditContactModal;

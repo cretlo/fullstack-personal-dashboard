@@ -4,3 +4,9 @@ export interface Contact {
   phone: string;
   email: string;
 }
+
+export interface Note {
+  id: number;
+  title: string;
+  note: string;
+}

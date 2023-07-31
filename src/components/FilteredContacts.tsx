@@ -5,6 +5,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import FormControl from "react-bootstrap/FormControl";
 import { Contact as ContactType } from "../types";
+import AddContactModal from "./AddContactModal";
 
 interface Props {
   initialContacts: ContactType[];
@@ -68,9 +69,7 @@ const FilteredContact = ({ initialContacts }: Props) => {
     <>
       <h2 className="mb-3">Contacts</h2>
       <div className="d-grid mb-3">
-        <button type="button" className="btn btn-primary">
-          Add Contact
-        </button>
+        <AddContactModal handleAddContact={handleAddContact} />
       </div>
       <InputGroup className="mb-3">
         <FormControl

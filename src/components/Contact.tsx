@@ -1,4 +1,4 @@
-import ContactModal from "./ContactModal";
+import EditContactModal from "./EditContactModal";
 import { Contact as ContactType } from "../types";
 
 interface Props {
@@ -12,7 +12,6 @@ const Contact = ({
   contact,
   handleEditContact,
   handleDeleteContact,
-  handleAddContact,
 }: Props) => {
   return (
     <div className="bg-light p-2 mb-2 border text-break">
@@ -22,11 +21,9 @@ const Contact = ({
         <li>Email: {contact.email}</li>
       </ul>
       <div className="d-flex justify-content-end">
-        <ContactModal
+        <EditContactModal
           contact={contact}
-          type="edit"
           handleEditContact={handleEditContact}
-          handleAddContact={handleAddContact}
         />
         <div className="vr mx-2" />
         <button
