@@ -29,7 +29,7 @@ const Notes = ({ initialNotes }: Props) => {
           return (
             <Note
               key={note.id}
-              note={note}
+              initialNote={note}
               handleUpdateNote={handleUpdateNote}
               handleAddNote={handleAddNote}
               handleDeleteNote={handleDeleteNote}

@@ -1,9 +1,27 @@
 import { useRef, useState, useEffect } from "react";
-import { Editor, EditorState, DraftComponent, RichUtils } from "draft-js";
+import {
+  Editor,
+  EditorState,
+  DraftComponent,
+  RichUtils,
+  convertToRaw,
+  convertFromRaw,
+} from "draft-js";
 import { inlineStyles, blockTypes } from "../lib/editorData";
+import { Note as NoteType } from "../types";
 
-const NoteEditor = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+interface Props {
+  note: NoteType;
+  setNote: (note: NoteType) => void;
+}
+
+const NoteEditor = ({ note, setNote }: Props) => {
+  const initialState = !note.editorState
+    ? EditorState.createEmpty()
+    : EditorState.createWithContent(
+        convertFromRaw(JSON.parse(note.editorState)),
+      );
+  const [editorState, setEditorState] = useState(initialState);
   const editor = useRef<DraftComponent.Base.DraftEditor | null>(null);
   const [activeStyleSet, setActiveSet] = useState<Set<string>>(new Set());
   const [activeBlockType, setActiveBlockType] = useState("");
@@ -16,6 +34,7 @@ const NoteEditor = () => {
     const active = activeStyleSet.has(style) ? "active" : "";
     return (
       <button
+        key={style}
         data-style={style}
         onMouseDown={toggleInlineStyle}
         className={`btn btn-outline-dark ${active}`}
@@ -29,6 +48,7 @@ const NoteEditor = () => {
     const active = activeBlockType === type ? "active" : "";
     return (
       <button
+        key={type}
         data-block-type={type}
         onMouseDown={toggleBlockType}
         className={`btn btn-outline-dark ${active}`}
@@ -97,7 +117,17 @@ const NoteEditor = () => {
         ref={editor}
         placeholder="Add note here..."
         editorState={editorState}
-        onChange={(editorState) => setEditorState(editorState)}
+        onChange={(editorState) => {
+          const rawContentState = JSON.stringify(
+            convertToRaw(editorState.getCurrentContent()),
+          );
+          setNote({
+            ...note,
+            note: editorState.getCurrentContent().getPlainText(),
+            editorState: rawContentState,
+          });
+          setEditorState(editorState);
+        }}
       />
     </div>
   );

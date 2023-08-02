@@ -7,16 +7,19 @@ const initalNotes = [
     id: 0,
     title: "First note",
     note: "This is a bunch of random text",
+    editorState: "",
   },
   {
     id: 1,
     title: "Second note",
     note: "This is a bunch of random text",
+    editorState: "",
   },
   {
     id: 2,
     title: "Third note",
     note: "This is a bunch of random text",
+    editorState: "",
   },
 ];
 

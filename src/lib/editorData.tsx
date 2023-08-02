@@ -13,7 +13,7 @@ import {
   TbSourceCode,
 } from "react-icons/tb";
 
-export const styles = [
+export const inlineStyles = [
   {
     style: "BOLD",
     iconComponent: <TbBold />,
