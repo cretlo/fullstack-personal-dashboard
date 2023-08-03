@@ -17,15 +17,13 @@ interface Props {
 }
 
 const NoteEditor = ({ note, handleEditorChange }: Props) => {
-  const initialState = !note.editorState
-    ? EditorState.createEmpty()
-    : EditorState.createWithContent(
-        convertFromRaw(JSON.parse(note.editorState)),
-      );
-  const [editorState, setEditorState] = useState(initialState);
+  const [editorState, setEditorState] = useState(getInitialState());
   const editorRef = useRef<DraftComponent.Base.DraftEditor | null>(null);
   const activeStyleSet = new Set(editorState.getCurrentInlineStyle().toArray());
-  const [activeBlockType, setActiveBlockType] = useState("");
+  const activeBlockType = editorState
+    .getCurrentContent()
+    .getLastBlock()
+    .getType();
 
   useEffect(() => {
     focusEditor();
@@ -59,17 +57,19 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
     );
   });
 
-  function focusEditor() {
-    editorRef.current?.focus();
+  function getInitialState(): EditorState {
+    if (!note.editorState) {
+      return EditorState.createEmpty();
+    }
+
+    const convertedContentState = convertFromRaw(JSON.parse(note.editorState));
+    let initialState = EditorState.createWithContent(convertedContentState);
+    initialState = EditorState.moveFocusToEnd(initialState);
+    return initialState;
   }
 
-  function handleActiveBlockType(value: string) {
-    if (activeBlockType === value) {
-      setActiveBlockType("");
-    } else {
-      setActiveBlockType(value);
-    }
-    return;
+  function focusEditor() {
+    editorRef.current?.focus();
   }
 
   function toggleInlineStyle(e: React.MouseEvent) {
@@ -89,7 +89,6 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
 
     if (!blockType) return;
 
-    handleActiveBlockType(blockType);
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   }
 

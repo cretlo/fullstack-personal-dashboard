@@ -70,7 +70,7 @@ const Note = ({
         {displayedTitle}
       </button>
 
-      <Modal show={show} backdrop="static">
+      <Modal size="lg" show={show} backdrop="static">
         <Modal.Header>
           <input
             className="form-control"
