@@ -7,7 +7,7 @@ import {
   convertToRaw,
   convertFromRaw,
 } from "draft-js";
-import { inlineStyles, blockTypes } from "../lib/editorData";
+import { inlineStyles, blockTypes } from "../../lib/editorData";
 import { Note as NoteType } from "../types";
 import "draft-js/dist/Draft.css";
 
@@ -23,10 +23,8 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
         convertFromRaw(JSON.parse(note.editorState)),
       );
   const [editorState, setEditorState] = useState(initialState);
-  const editor = useRef<DraftComponent.Base.DraftEditor | null>(null);
-  const [activeStyleSet, setActiveSet] = useState<Set<string>>(
-    new Set(note.activeInlineStyles),
-  );
+  const editorRef = useRef<DraftComponent.Base.DraftEditor | null>(null);
+  const activeStyleSet = new Set(editorState.getCurrentInlineStyle().toArray());
   const [activeBlockType, setActiveBlockType] = useState("");
 
   useEffect(() => {
@@ -62,26 +60,16 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
   });
 
   function focusEditor() {
-    editor.current?.focus();
+    editorRef.current?.focus();
   }
 
-  function handleActiveBtns(value: string, type: "block" | "style") {
-    if (type === "block") {
-      if (activeBlockType === value) {
-        setActiveBlockType("");
-      } else {
-        setActiveBlockType(value);
-      }
-      return;
-    }
-
-    const newActiveStyleSet = new Set([...activeStyleSet]);
-    if (newActiveStyleSet.has(value)) {
-      newActiveStyleSet.delete(value);
+  function handleActiveBlockType(value: string) {
+    if (activeBlockType === value) {
+      setActiveBlockType("");
     } else {
-      newActiveStyleSet.add(value);
+      setActiveBlockType(value);
     }
-    setActiveSet(newActiveStyleSet);
+    return;
   }
 
   function toggleInlineStyle(e: React.MouseEvent) {
@@ -90,7 +78,6 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
 
     if (!style) return;
 
-    handleActiveBtns(style, "style");
     setEditorState(
       RichUtils.toggleInlineStyle(editorState, style.toUpperCase()),
     );
@@ -102,7 +89,7 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
 
     if (!blockType) return;
 
-    handleActiveBtns(blockType, "block");
+    handleActiveBlockType(blockType);
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   }
 
@@ -128,7 +115,7 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
         {blockTypeButtons}
       </div>
       <Editor
-        ref={editor}
+        ref={editorRef}
         placeholder="Add note here..."
         editorState={editorState}
         onChange={handleChange}
