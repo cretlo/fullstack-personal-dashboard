@@ -10,4 +10,5 @@ export interface Note {
   title: string;
   note: string;
   editorState: string;
+  activeInlineStyles: string[];
 }

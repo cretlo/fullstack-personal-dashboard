@@ -9,13 +9,14 @@ import {
 } from "draft-js";
 import { inlineStyles, blockTypes } from "../lib/editorData";
 import { Note as NoteType } from "../types";
+import "draft-js/dist/Draft.css";
 
 interface Props {
   note: NoteType;
-  setNote: (note: NoteType) => void;
+  handleEditorChange: (note: NoteType) => void;
 }
 
-const NoteEditor = ({ note, setNote }: Props) => {
+const NoteEditor = ({ note, handleEditorChange }: Props) => {
   const initialState = !note.editorState
     ? EditorState.createEmpty()
     : EditorState.createWithContent(
@@ -23,7 +24,9 @@ const NoteEditor = ({ note, setNote }: Props) => {
       );
   const [editorState, setEditorState] = useState(initialState);
   const editor = useRef<DraftComponent.Base.DraftEditor | null>(null);
-  const [activeStyleSet, setActiveSet] = useState<Set<string>>(new Set());
+  const [activeStyleSet, setActiveSet] = useState<Set<string>>(
+    new Set(note.activeInlineStyles),
+  );
   const [activeBlockType, setActiveBlockType] = useState("");
 
   useEffect(() => {
@@ -73,9 +76,11 @@ const NoteEditor = ({ note, setNote }: Props) => {
     }
 
     const newActiveStyleSet = new Set([...activeStyleSet]);
-    newActiveStyleSet.has(value)
-      ? newActiveStyleSet.delete(value)
-      : newActiveStyleSet.add(value);
+    if (newActiveStyleSet.has(value)) {
+      newActiveStyleSet.delete(value);
+    } else {
+      newActiveStyleSet.add(value);
+    }
     setActiveSet(newActiveStyleSet);
   }
 
@@ -83,9 +88,7 @@ const NoteEditor = ({ note, setNote }: Props) => {
     e.preventDefault();
     const style = e.currentTarget.getAttribute("data-style");
 
-    if (!style) {
-      return;
-    }
+    if (!style) return;
 
     handleActiveBtns(style, "style");
     setEditorState(
@@ -97,12 +100,23 @@ const NoteEditor = ({ note, setNote }: Props) => {
     e.preventDefault();
     const blockType = e.currentTarget.getAttribute("data-block-type");
 
-    if (!blockType) {
-      return;
-    }
+    if (!blockType) return;
 
     handleActiveBtns(blockType, "block");
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
+  }
+
+  function handleChange(editorState: EditorState) {
+    const rawContentState = JSON.stringify(
+      convertToRaw(editorState.getCurrentContent()),
+    );
+    handleEditorChange({
+      ...note,
+      note: editorState.getCurrentContent().getPlainText(),
+      editorState: rawContentState,
+      activeInlineStyles: editorState.getCurrentInlineStyle().toArray(),
+    });
+    setEditorState(editorState);
   }
 
   return (
@@ -117,17 +131,7 @@ const NoteEditor = ({ note, setNote }: Props) => {
         ref={editor}
         placeholder="Add note here..."
         editorState={editorState}
-        onChange={(editorState) => {
-          const rawContentState = JSON.stringify(
-            convertToRaw(editorState.getCurrentContent()),
-          );
-          setNote({
-            ...note,
-            note: editorState.getCurrentContent().getPlainText(),
-            editorState: rawContentState,
-          });
-          setEditorState(editorState);
-        }}
+        onChange={handleChange}
       />
     </div>
   );

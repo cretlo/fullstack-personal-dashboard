@@ -2,42 +2,63 @@ import { useState } from "react";
 import { Note as NoteType } from "../types";
 import Modal from "react-bootstrap/Modal";
 import NoteEditor from "./NoteEditor";
-import "draft-js/dist/Draft.css";
 
 interface Props {
   initialNote: NoteType;
+  isNewNote: boolean;
   handleAddNote: (note: NoteType) => void;
   handleUpdateNote: (note: NoteType) => void;
   handleDeleteNote: (id: number) => void;
+  handleNewNote?: (isNewNote: boolean) => void;
 }
 
 const Note = ({
   initialNote,
+  isNewNote,
+  handleNewNote,
   handleAddNote,
   handleUpdateNote,
   handleDeleteNote,
 }: Props) => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(isNewNote);
   const [note, setNote] = useState(initialNote);
+  const displayedTitle = note.title ? note.title : "Untitled";
 
-  if (note.id === 0) {
-    console.log(note.editorState);
+  function handleShow() {
+    setShow(true);
   }
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
-  const handleCancel = () => {
+  function handleClose() {
+    setShow(false);
+
+    if (isNewNote && handleNewNote) {
+      handleNewNote(false);
+    }
+  }
+
+  function handleCancel() {
     handleClose();
     setNote(initialNote);
-  };
-  const handleSave = () => {
+  }
+
+  function handleSave() {
     if (Object.is(initialNote, note)) {
       handleClose();
       return;
     }
-    handleUpdateNote(note);
-    handleClose();
-  };
+
+    if (isNewNote) {
+      handleAddNote(note);
+      handleClose();
+    } else {
+      handleUpdateNote(note);
+      handleClose();
+    }
+  }
+
+  function handleChange(updatedNote: NoteType) {
+    setNote(updatedNote);
+  }
 
   return (
     <>
@@ -46,7 +67,7 @@ const Note = ({
         className="list-group-item list-group-item-action"
         onClick={handleShow}
       >
-        {note.title}
+        {displayedTitle}
       </button>
 
       <Modal show={show} backdrop="static">
@@ -58,9 +79,9 @@ const Note = ({
           />
         </Modal.Header>
         <Modal.Body>
-          <NoteEditor note={note} setNote={setNote} />
+          <NoteEditor note={note} handleEditorChange={handleChange} />
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="justify-content-start">
           <button
             type="button"
             className="btn btn-primary"
@@ -75,6 +96,15 @@ const Note = ({
           >
             Cancel
           </button>
+          {!isNewNote && (
+            <button
+              type="button"
+              className="btn btn-danger ms-auto"
+              onClick={() => handleDeleteNote(note.id)}
+            >
+              Delete
+            </button>
+          )}
         </Modal.Footer>
       </Modal>
     </>

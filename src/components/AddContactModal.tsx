@@ -33,8 +33,12 @@ const AddContactModal = ({ handleAddContact }: Props) => {
 
   return (
     <>
-      <button type="button" className="btn btn-primary" onClick={handleShow}>
-        Add
+      <button
+        type="button"
+        className="btn py-2 btn-primary"
+        onClick={handleShow}
+      >
+        Add Contact
       </button>
       <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header>Add Contact</Modal.Header>
