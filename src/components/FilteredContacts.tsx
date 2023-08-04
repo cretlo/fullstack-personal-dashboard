@@ -68,33 +68,42 @@ const FilteredContact = ({ initialContacts }: Props) => {
   return (
     <>
       <h2 className="mb-3">Contacts</h2>
-      <div className="d-grid mb-3">
-        <AddContactModal handleAddContact={handleAddContact} />
+      <div
+        className="position-relative overflow-scroll"
+        style={{ maxHeight: "80vh" }}
+      >
+        <div className="sticky-top bg-white pb-3">
+          <div className="d-grid mb-3">
+            <AddContactModal handleAddContact={handleAddContact} />
+          </div>
+          <InputGroup>
+            <FormControl
+              type="text"
+              onChange={(e) => setFilterText(e.target.value)}
+              value={filterText}
+              placeholder="Filter contacts using the catagory on the right..."
+            />
+            <DropdownButton
+              variant="outline-secondary"
+              title={
+                activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)
+              }
+              id="input-group-dropdown-1"
+            >
+              <DropdownItem onClick={() => setActiveFilter("name")}>
+                Name
+              </DropdownItem>
+              <DropdownItem onClick={() => setActiveFilter("phone")}>
+                Phone
+              </DropdownItem>
+              <DropdownItem onClick={() => setActiveFilter("email")}>
+                Email
+              </DropdownItem>
+            </DropdownButton>
+          </InputGroup>
+        </div>
+        {filteredContacts}
       </div>
-      <InputGroup className="mb-3">
-        <FormControl
-          type="text"
-          onChange={(e) => setFilterText(e.target.value)}
-          value={filterText}
-          placeholder="Filter contacts using the catagory on the right..."
-        />
-        <DropdownButton
-          variant="outline-secondary"
-          title={activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)}
-          id="input-group-dropdown-1"
-        >
-          <DropdownItem onClick={() => setActiveFilter("name")}>
-            Name
-          </DropdownItem>
-          <DropdownItem onClick={() => setActiveFilter("phone")}>
-            Phone
-          </DropdownItem>
-          <DropdownItem onClick={() => setActiveFilter("email")}>
-            Email
-          </DropdownItem>
-        </DropdownButton>
-      </InputGroup>
-      {filteredContacts}
     </>
   );
 };

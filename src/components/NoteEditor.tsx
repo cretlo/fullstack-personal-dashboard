@@ -100,7 +100,6 @@ const NoteEditor = ({ note, handleEditorChange }: Props) => {
       ...note,
       note: editorState.getCurrentContent().getPlainText(),
       editorState: rawContentState,
-      activeInlineStyles: editorState.getCurrentInlineStyle().toArray(),
     });
     setEditorState(editorState);
   }

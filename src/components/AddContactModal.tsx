@@ -35,7 +35,7 @@ const AddContactModal = ({ handleAddContact }: Props) => {
     <>
       <button
         type="button"
-        className="btn py-2 btn-primary"
+        className="btn btn-primary py-2 "
         onClick={handleShow}
       >
         Add Contact

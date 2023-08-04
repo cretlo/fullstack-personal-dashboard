@@ -14,7 +14,6 @@ const Notes = ({ initialNotes }: Props) => {
     title: "Untitled",
     note: "",
     editorState: "",
-    activeInlineStyles: [],
   };
 
   function handleAddNote(newNote: NoteType) {
@@ -36,32 +35,42 @@ const Notes = ({ initialNotes }: Props) => {
   return (
     <>
       <h2 className="mb-3">Notes</h2>
-      <div className="list-group">
-        <button className="list-group-item active" onClick={handleAddNewNote}>
-          Create Note
-        </button>
-        {notes.map((note) => {
-          return (
-            <Note
-              key={note.id}
-              isNewNote={false}
-              initialNote={note}
-              handleUpdateNote={handleUpdateNote}
-              handleAddNote={handleAddNote}
-              handleDeleteNote={handleDeleteNote}
-            />
-          );
-        })}
-        {isNewNote && (
-          <Note
-            initialNote={newNote}
-            isNewNote={isNewNote}
-            handleUpdateNote={handleAddNote}
-            handleAddNote={handleAddNote}
-            handleDeleteNote={handleDeleteNote}
-            handleNewNote={setIsNewNote}
-          />
-        )}
+      <div
+        className="position-relative overflow-scroll bg-warning"
+        style={{ maxHeight: "80vh" }}
+      >
+        <div className="list-group">
+          <button
+            className="list-group-item active sticky-top"
+            onClick={handleAddNewNote}
+          >
+            Create Note
+          </button>
+          <div>
+            {notes.map((note) => {
+              return (
+                <Note
+                  key={note.id}
+                  isNewNote={false}
+                  initialNote={note}
+                  handleUpdateNote={handleUpdateNote}
+                  handleAddNote={handleAddNote}
+                  handleDeleteNote={handleDeleteNote}
+                />
+              );
+            })}
+            {isNewNote && (
+              <Note
+                initialNote={newNote}
+                isNewNote={isNewNote}
+                handleUpdateNote={handleAddNote}
+                handleAddNote={handleAddNote}
+                handleDeleteNote={handleDeleteNote}
+                handleNewNote={setIsNewNote}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );
