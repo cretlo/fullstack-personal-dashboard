@@ -1,4 +1,4 @@
-import AppNavbar from "./AppNavbar";
+import AppNavbar from "../components/AppNavbar";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";

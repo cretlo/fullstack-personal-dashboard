@@ -7,7 +7,7 @@ import {
   convertToRaw,
   convertFromRaw,
 } from "draft-js";
-import { inlineStyles, blockTypes } from "../../lib/editorData";
+import { inlineStyles, blockTypes } from "../data/editorData";
 import { Note as NoteType } from "../types";
 import "draft-js/dist/Draft.css";
 

@@ -1,4 +1,4 @@
-import AppNavbar from "./AppNavbar";
+import AppNavbar from "../components/AppNavbar";
 
 const Root = () => {
   return (
