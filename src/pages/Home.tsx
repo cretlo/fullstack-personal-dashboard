@@ -1,6 +1,6 @@
 import AppNavbar from "../components/AppNavbar";
 import Notes from "../components/Notes";
-import FilteredContact from "../components/FilteredContacts";
+import FilteredContact from "../components/contact/FilteredContacts";
 
 const initalNotes = [
   {

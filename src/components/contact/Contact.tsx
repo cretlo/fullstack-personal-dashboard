@@ -1,18 +1,12 @@
-import EditContactModal from "./EditContactModal";
-import { Contact as ContactType } from "../types";
+import { Contact as ContactType } from "../../types";
 
 interface Props {
   contact: ContactType;
-  handleEditContact: (contact: ContactType) => void;
-  handleAddContact: (contact: ContactType) => void;
-  handleDeleteContact: (id: number) => void;
+  showModal: (contact: ContactType) => void;
+  deleteContact: (id: number) => void;
 }
 
-const Contact = ({
-  contact,
-  handleEditContact,
-  handleDeleteContact,
-}: Props) => {
+const Contact = ({ contact, showModal, deleteContact }: Props) => {
   return (
     <div className="bg-light p-2 mb-2 border text-break">
       <p>{contact.name}</p>
@@ -21,15 +15,18 @@ const Contact = ({
         <li>Email: {contact.email}</li>
       </ul>
       <div className="d-flex justify-content-end">
-        <EditContactModal
-          contact={contact}
-          handleEditContact={handleEditContact}
-        />
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => showModal(contact)}
+        >
+          Edit
+        </button>
         <div className="vr mx-2" />
         <button
           type="button"
           className="btn btn-danger"
-          onClick={() => handleDeleteContact(contact.id)}
+          onClick={() => deleteContact(contact.id)}
         >
           Delete
         </button>
