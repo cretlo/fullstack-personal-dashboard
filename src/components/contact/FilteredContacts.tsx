@@ -131,7 +131,7 @@ const FilteredContact = ({ initialContacts }: Props) => {
       </InputGroup>
       <div
         className="position-relative overflow-scroll"
-        style={{ maxHeight: "80vh" }}
+        style={{ maxHeight: "70vh" }}
       >
         {filteredContacts}
       </div>

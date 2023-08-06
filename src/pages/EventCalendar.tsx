@@ -1,4 +1,7 @@
+import { useContext } from "react";
+import { EventContext } from "../contexts/EventsContext";
 import AppNavbar from "../components/AppNavbar";
+// Full calendar
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
@@ -7,6 +10,8 @@ import { DateSelectArg } from "@fullcalendar/core/index.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 const EventCalendar = () => {
+  const events = useContext(EventContext);
+
   function handleClick(arg: DateClickArg) {
     console.log(arg.dateStr);
   }
@@ -21,6 +26,7 @@ const EventCalendar = () => {
       <div className="container">
         <FullCalendar
           dateClick={handleClick}
+          events={events}
           selectable={true}
           themeSystem="bootstrap5"
           select={handleSelect}

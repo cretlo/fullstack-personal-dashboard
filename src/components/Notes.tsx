@@ -16,20 +16,16 @@ const Notes = ({ initialNotes }: Props) => {
     editorState: "",
   };
 
-  function handleAddNote(newNote: NoteType) {
+  function addNote(newNote: NoteType) {
     setNotes([...notes, newNote]);
   }
 
-  function handleDeleteNote(id: number) {
+  function deleteNote(id: number) {
     setNotes(notes.filter((note) => note.id !== id));
   }
 
-  function handleUpdateNote(newNote: NoteType) {
+  function updateNote(newNote: NoteType) {
     setNotes(notes.map((note) => (note.id === newNote.id ? newNote : note)));
-  }
-
-  function handleAddNewNote() {
-    setIsNewNote(true);
   }
 
   return (
@@ -42,7 +38,7 @@ const Notes = ({ initialNotes }: Props) => {
         <div className="list-group">
           <button
             className="list-group-item active sticky-top"
-            onClick={handleAddNewNote}
+            onClick={() => setIsNewNote(true)}
           >
             Create Note
           </button>
@@ -53,9 +49,9 @@ const Notes = ({ initialNotes }: Props) => {
                   key={note.id}
                   isNewNote={false}
                   initialNote={note}
-                  handleUpdateNote={handleUpdateNote}
-                  handleAddNote={handleAddNote}
-                  handleDeleteNote={handleDeleteNote}
+                  updateNote={updateNote}
+                  addNote={addNote}
+                  deleteNote={deleteNote}
                 />
               );
             })}
@@ -63,9 +59,9 @@ const Notes = ({ initialNotes }: Props) => {
               <Note
                 initialNote={newNote}
                 isNewNote={isNewNote}
-                handleUpdateNote={handleAddNote}
-                handleAddNote={handleAddNote}
-                handleDeleteNote={handleDeleteNote}
+                updateNote={addNote}
+                addNote={addNote}
+                deleteNote={deleteNote}
                 handleNewNote={setIsNewNote}
               />
             )}

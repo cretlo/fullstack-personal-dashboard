@@ -1,6 +1,7 @@
 import AppNavbar from "../components/AppNavbar";
 import Notes from "../components/Notes";
 import FilteredContact from "../components/contact/FilteredContacts";
+import Events from "../components/Events";
 
 const initalNotes = [
   {
@@ -53,6 +54,9 @@ const Home = () => {
       <AppNavbar />
       <div className="container">
         <div className="row">
+          <div className="col-12 col-lg mb-3">
+            <Events />
+          </div>
           <div className="col-12 col-lg mb-3">
             <Notes initialNotes={initalNotes} />
           </div>

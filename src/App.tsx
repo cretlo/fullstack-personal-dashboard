@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import EventCalendar from "./pages/EventCalendar";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 /*
  * USE BOOTSTRAP-ICONS INSTEAD
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
     path: "calendar",
     element: <EventCalendar />,
   },
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "register",
+    element: <Register />,
+  },
 ]);
 
 function App() {
@@ -34,19 +44,5 @@ function App() {
     </>
   );
 }
-
-//const homepage = (
-//<div className="container">
-//  <EventCalendar />
-//</div>
-//  <div className="row">
-//    <div className="col-12 col-lg mb-3">
-//      <Notes initialNotes={initalNotes} />
-//    </div>
-//    <div className="col-12 col-lg">
-//      <FilteredContact initialContacts={initialContacts} />
-//    </div>
-//  </div>
-//);
 
 export default App;
