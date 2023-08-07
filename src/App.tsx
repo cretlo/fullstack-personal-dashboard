@@ -1,19 +1,19 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { EventsProvider } from "./contexts/EventsContext";
 
 import Root from "./pages/Root";
 import Home from "./pages/Home";
 import EventCalendar from "./pages/EventCalendar";
-
-import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 /*
  * USE BOOTSTRAP-ICONS INSTEAD
  * READ DOCS
  *
  * */
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,7 +40,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <RouterProvider router={router} />
+      <EventsProvider>
+        <RouterProvider router={router} />
+      </EventsProvider>
     </>
   );
 }

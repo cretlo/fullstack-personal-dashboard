@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { EventContext } from "../contexts/EventsContext";
+import { EventsContext } from "../contexts/EventsContext";
 import AppNavbar from "../components/AppNavbar";
 // Full calendar
 import FullCalendar from "@fullcalendar/react";
@@ -10,7 +10,7 @@ import { DateSelectArg } from "@fullcalendar/core/index.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 const EventCalendar = () => {
-  const events = useContext(EventContext);
+  const events = useContext(EventsContext);
 
   function handleClick(arg: DateClickArg) {
     console.log(arg.dateStr);
