@@ -6,11 +6,26 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import bootstrap5 from "@fullcalendar/bootstrap5";
-import { DateSelectArg } from "@fullcalendar/core/index.js";
+import { DateSelectArg, EventInput } from "@fullcalendar/core/index.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
+import dayjs from "dayjs";
 
 const EventCalendar = () => {
   const events = useContext(EventsContext);
+
+  // Needed since fullcalendar doesnt include a day at midnight
+  const formattedEvents: EventInput[] = events.map((event) => {
+    if (event.end) {
+      return {
+        ...event,
+        end: dayjs(event.end?.toString())
+          .add(1, "day")
+          .toISOString(),
+      };
+    }
+
+    return event;
+  });
 
   function handleClick(arg: DateClickArg) {
     console.log(arg.dateStr);
@@ -26,7 +41,7 @@ const EventCalendar = () => {
       <div className="container">
         <FullCalendar
           dateClick={handleClick}
-          events={events}
+          events={formattedEvents}
           selectable={true}
           themeSystem="bootstrap5"
           select={handleSelect}
