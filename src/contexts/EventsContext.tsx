@@ -11,7 +11,8 @@ const initialEvents = [
   {
     id: crypto.randomUUID(),
     title: "First event",
-    start: "2023-08-03T00:00:00Z",
+    start: "2023-08-10T00:00:00Z",
+    end: "",
     description: "Hello there",
     allDay: true,
   },
@@ -19,6 +20,16 @@ const initialEvents = [
     id: crypto.randomUUID(),
     title: "Second event",
     start: "2023-08-07T04:25:45.000Z",
+    end: "",
+    description: "",
+    allDay: false,
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "Third event",
+    start: "2023-08-07T06:40:00Z",
+    end: "",
+    description: "",
     allDay: false,
   },
 ];

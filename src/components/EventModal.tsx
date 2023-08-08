@@ -13,42 +13,43 @@ import dayjs from "dayjs";
 
 interface Props {
   initialEvent: EventInput;
+  isNewEvent: boolean;
   show: boolean;
   onShow: () => void;
   onClose: () => void;
 }
 
-const EventModal = ({ initialEvent, show, onClose }: Props) => {
+const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
   const dispatch = useContext(EventsDispatchContext);
   const [event, setEvent] = useState(initialEvent);
-  console.log(event);
 
-  function toDateTimeLocal(dateISOStr: DateInput) {
+  function toDateTimeLocal(dateISOStr: DateInput | undefined) {
+    if (!dateISOStr) return "";
+
     return dayjs(dateISOStr.toString()).format("YYYY-MM-DDTHH:mm:ss");
   }
 
-  function toDate(dateISOStr: DateInput) {
+  function toDate(dateISOStr: DateInput | undefined) {
+    if (!dateISOStr) return "";
+
     return dayjs(dateISOStr.toString()).format("YYYY-MM-DD");
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    const copiedEvent = Object.assign(event);
-
     if (e.currentTarget.name === "allDay") {
-      setEvent({ ...copiedEvent, allDay: e.currentTarget.checked });
-    } else if (e.currentTarget.type === "date") {
+      console.log("Changing all day", e.currentTarget.checked);
+      setEvent({ ...event, allDay: e.currentTarget.checked });
+    } else if (
+      e.currentTarget.type === "date" ||
+      e.currentTarget.type === "datetime-local"
+    ) {
       setEvent({
-        ...copiedEvent,
-        [e.currentTarget.name]: toDate(e.currentTarget.value),
-      });
-    } else if (e.currentTarget.type === "datetime-local") {
-      setEvent({
-        ...copiedEvent,
-        [e.currentTarget.name]: toDateTimeLocal(e.currentTarget.value),
+        ...event,
+        [e.currentTarget.name]: dayjs(e.currentTarget.value).toISOString(),
       });
     } else {
       setEvent({
-        ...copiedEvent,
+        ...event,
         [e.currentTarget.name]: e.currentTarget.value,
       });
     }
@@ -59,14 +60,12 @@ const EventModal = ({ initialEvent, show, onClose }: Props) => {
 
     if (!dispatch) return;
 
-    if (initialEvent.start) {
-      console.log("Adding");
+    if (isNewEvent) {
       dispatch({
         type: "added",
         payload: event,
       });
     } else {
-      console.log("Updating");
       dispatch({
         type: "updated",
         payload: event,
@@ -109,19 +108,9 @@ const EventModal = ({ initialEvent, show, onClose }: Props) => {
                 <input
                   type="date"
                   required
-                  value={event.start && toDate(event.start)}
+                  value={toDate(event.start)}
                   className="form-control"
                   name="start"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">End Date</label>
-                <input
-                  type="date"
-                  value={event.end && toDate(event.start)}
-                  className="form-control"
-                  name="end"
                   onChange={handleChange}
                 />
               </div>
@@ -129,11 +118,11 @@ const EventModal = ({ initialEvent, show, onClose }: Props) => {
           ) : (
             <>
               <div className="mb-3">
-                <label className="form-label">Start Date</label>
+                <label className="form-label">Start Date and Time</label>
                 <input
                   type="datetime-local"
                   required
-                  value={event.start && toDateTimeLocal(event.start.toString())}
+                  value={toDateTimeLocal(event.start)}
                   className="form-control"
                   name="start"
                   onChange={handleChange}
@@ -141,6 +130,16 @@ const EventModal = ({ initialEvent, show, onClose }: Props) => {
               </div>
             </>
           )}
+          <div className="mb-3">
+            <label className="form-label">End Date</label>
+            <input
+              type="date"
+              value={toDate(event.end)}
+              className="form-control"
+              name="end"
+              onChange={handleChange}
+            />
+          </div>
           <div className="form-check mb-3">
             <label className="form-check-label">All Day</label>
             <input
