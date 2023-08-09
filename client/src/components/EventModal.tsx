@@ -23,7 +23,7 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
   const dispatch = useContext(EventsDispatchContext);
   const [event, setEvent] = useState(initialEvent);
 
-  function toDateTimeLocal(dateISOStr: DateInput | undefined) {
+  function toDateTime(dateISOStr: DateInput | undefined) {
     if (!dateISOStr) return "";
 
     return dayjs(dateISOStr.toString()).format("YYYY-MM-DDTHH:mm:ss");
@@ -37,7 +37,6 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.currentTarget.name === "allDay") {
-      console.log("Changing all day", e.currentTarget.checked);
       setEvent({ ...event, allDay: e.currentTarget.checked });
     } else if (
       e.currentTarget.type === "date" ||
@@ -122,7 +121,7 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
                 <input
                   type="datetime-local"
                   required
-                  value={toDateTimeLocal(event.start)}
+                  value={toDateTime(event.start)}
                   className="form-control"
                   name="start"
                   onChange={handleChange}

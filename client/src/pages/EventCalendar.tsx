@@ -14,7 +14,7 @@ const EventCalendar = () => {
   const events = useContext(EventsContext);
 
   // Needed since fullcalendar doesnt include a day at midnight
-  const formattedEvents: EventInput[] = events.map((event) => {
+  const adjustedEvents: EventInput[] = events.map((event) => {
     if (event.end) {
       return {
         ...event,
@@ -41,7 +41,7 @@ const EventCalendar = () => {
       <div className="container">
         <FullCalendar
           dateClick={handleClick}
-          events={formattedEvents}
+          events={adjustedEvents}
           selectable={true}
           themeSystem="bootstrap5"
           select={handleSelect}

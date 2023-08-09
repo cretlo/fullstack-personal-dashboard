@@ -17,9 +17,9 @@ const initialEvents = [
     allDay: true,
   },
   {
-    id: crypto.randomUUID(),
+    id: "1",
     title: "Second event",
-    start: "2023-08-07T04:25:45.000Z",
+    start: "2023-08-08T03:08:32.290Z",
     end: "",
     description: "",
     allDay: false,

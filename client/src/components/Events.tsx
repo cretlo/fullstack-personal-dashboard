@@ -18,7 +18,6 @@ const Events = () => {
     allDay: true,
   });
   const sortedEvents = useMemo(() => {
-    console.log("Begin Sorting Events...");
     return sortEvents(filterEvents(events));
   }, [events]);
 
@@ -79,30 +78,21 @@ const Events = () => {
 
   function getFullDateStr(event: EventInput): string {
     const nullDate = new Date(0);
-    const startDate = new Date(event.start?.toString() ?? nullDate);
-    const endDate = new Date(event.end?.toString() ?? nullDate);
-    const dateTimeFormatter = new Intl.DateTimeFormat(navigator.language, {
-      dateStyle: "short",
-      timeStyle: "short",
-    });
-    const dateFormatter = new Intl.DateTimeFormat(navigator.language);
+    const startDate = dayjs(event.start?.toString() ?? nullDate);
+    const endDate = dayjs(event.end?.toString() ?? nullDate);
 
     let startDateStr;
     let endDateStr;
 
-    if (event.allDay) {
-      startDateStr = !startDate.getTime()
-        ? "Invalid Date"
-        : dateFormatter.format(startDate);
+    if (startDate.unix() === 0) {
+      startDateStr = "Invalid Date";
     } else {
-      startDateStr = !startDate.getTime()
-        ? "Invalid Date"
-        : dateTimeFormatter.format(startDate);
+      startDateStr = event.allDay
+        ? startDate.format("M/D/YYYY")
+        : startDate.format("M/D/YYYY, h:mm a");
     }
 
-    endDateStr = !endDate.getTime()
-      ? ""
-      : " - " + dateFormatter.format(endDate);
+    endDateStr = !endDate.unix() ? "" : " - " + endDate.format("M/D/YYYY");
 
     return startDateStr + endDateStr;
   }
@@ -119,32 +109,25 @@ const Events = () => {
           Add Event
         </button>
       </div>
-      <div className="card p-3 bg-secondary">
-        <ul
-          className="list-group overflow-scroll"
-          style={{ maxHeight: "80vh" }}
-        >
-          {sortedEvents.map((event) => {
-            const fullDateStr = getFullDateStr(event);
+      <ul className="list-group overflow-scroll" style={{ maxHeight: "80vh" }}>
+        {sortedEvents.map((event) => {
+          const fullDateStr = getFullDateStr(event);
 
-            return (
-              <button
-                key={event.id}
-                className="list-group-item list-group-item-action"
-                onClick={() => handleChangeEvent(event)}
-              >
-                <div className="d-flex justify-content-between">
-                  <h4>{event.title}</h4>
-                  <small>
-                    <u>{fullDateStr}</u>
-                  </small>
-                </div>
-                {event.description && <p>{event.description}</p>}
-              </button>
-            );
-          })}
-        </ul>
-      </div>
+          return (
+            <button
+              key={event.id}
+              className="list-group-item list-group-item-action"
+              onClick={() => handleChangeEvent(event)}
+            >
+              <div className="d-flex justify-content-between">
+                <h4>{event.title}</h4>
+                <small className="text-muted">{fullDateStr}</small>
+              </div>
+              {event.description && <p>{event.description}</p>}
+            </button>
+          );
+        })}
+      </ul>
       <EventModal
         key={currEvent.id}
         initialEvent={currEvent}
