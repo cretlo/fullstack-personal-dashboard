@@ -17,10 +17,6 @@ const db_1 = __importDefault(require("../db/db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
 const router = express_1.default.Router();
-router.use((req, _, next) => {
-    console.log("Events route hit");
-    next();
-});
 router.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield db_1.default.select().from(schema_1.events);
@@ -38,7 +34,6 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         description: req.body.description,
         allDay: req.body.allDay,
     };
-    console.log("New Event: ", newEvent);
     try {
         const result = yield db_1.default.insert(schema_1.events).values(newEvent).returning();
         console.log("Post result: ", result);

@@ -16,7 +16,7 @@ async function main() {
     "postgres://postgres:postgres@localhost:5432/planner",
     { max: 1 },
   );
-  //await migrate(drizzle(migrationClient), { migrationsFolder: "drizzle" });
+  // migrate(drizzle(migrationClient), { migrationsFolder: "drizzle" });
 
   const app = express();
 

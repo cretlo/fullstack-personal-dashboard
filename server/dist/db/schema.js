@@ -12,12 +12,12 @@ exports.notes = (0, pg_core_1.pgTable)("notes", {
     id: (0, pg_core_1.uuid)("id").primaryKey().defaultRandom(),
     title: (0, pg_core_1.varchar)("title", { length: 100 }).default("Untitled"),
     note: (0, pg_core_1.text)("note"),
-    editor: (0, pg_core_1.text)("editor"),
+    editorState: (0, pg_core_1.text)("editor_state"),
 });
 exports.events = (0, pg_core_1.pgTable)("events", {
     id: (0, pg_core_1.uuid)("id").primaryKey().defaultRandom(),
-    title: (0, pg_core_1.varchar)("title", { length: 256 }),
-    start: (0, pg_core_1.timestamp)("start", { withTimezone: true }),
+    title: (0, pg_core_1.varchar)("title", { length: 256 }).notNull(),
+    start: (0, pg_core_1.timestamp)("start", { withTimezone: true }).notNull(),
     end: (0, pg_core_1.timestamp)("end", { withTimezone: true }),
     description: (0, pg_core_1.varchar)("description", { length: 256 }).default(""),
     allDay: (0, pg_core_1.boolean)("allDay").default(false),

@@ -28,11 +28,10 @@ router.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Body: ", req.body);
     const newNote = {
         title: req.body.title,
         note: req.body.note,
-        editor: req.body.editor,
+        editorState: req.body.editorState,
     };
     try {
         const result = yield db_1.default.insert(schema_1.notes).values(newNote).returning();
@@ -60,7 +59,8 @@ router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const noteId = req.body.id;
+    const noteId = req.params.id;
+    console.log("Delete id: ", noteId);
     try {
         const result = yield db_1.default
             .delete(schema_1.notes)

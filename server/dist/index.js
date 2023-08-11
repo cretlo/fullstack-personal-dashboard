@@ -24,7 +24,7 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // migrations
         const migrationClient = (0, postgres_1.default)("postgres://postgres:postgres@localhost:5432/planner", { max: 1 });
-        //await migrate(drizzle(migrationClient), { migrationsFolder: "drizzle" });
+        // migrate(drizzle(migrationClient), { migrationsFolder: "drizzle" });
         const app = (0, express_1.default)();
         app.use(express_1.default.json());
         app.use((0, cors_1.default)());

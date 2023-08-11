@@ -8,11 +8,6 @@ const router = express.Router();
 type Event = InferModel<typeof events, "select">;
 type NewEvent = InferModel<typeof events, "insert">;
 
-router.use((req, _, next) => {
-  console.log("Events route hit");
-  next();
-});
-
 router.get("/", async (_, res) => {
   try {
     const result: Event[] = await db.select().from(events);
@@ -30,7 +25,6 @@ router.post("/", async (req, res) => {
     description: req.body.description,
     allDay: req.body.allDay,
   };
-  console.log("New Event: ", newEvent);
 
   try {
     const result = await db.insert(events).values(newEvent).returning();

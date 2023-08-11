@@ -19,11 +19,10 @@ router.get("/", async (_, res) => {
 });
 
 router.post("/", async (req, res) => {
-  console.log("Body: ", req.body);
   const newNote: NewNote = {
     title: req.body.title,
     note: req.body.note,
-    editor: req.body.editor,
+    editorState: req.body.editorState,
   };
 
   try {
@@ -53,7 +52,9 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-  const noteId = req.body.id;
+  const noteId = req.params.id;
+
+  console.log("Delete id: ", noteId);
 
   try {
     const result = await db
