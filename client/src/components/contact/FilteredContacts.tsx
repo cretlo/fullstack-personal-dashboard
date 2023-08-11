@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Contact from "./Contact";
 import InputGroup from "react-bootstrap/InputGroup";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import FormControl from "react-bootstrap/FormControl";
-import { Contact as ContactType } from "../../types";
+import { Contact as ContactType, NewContact } from "../../types";
 import ContactModal from "./ContactModal";
+import axios from "axios";
 
-interface Props {
-  initialContacts: ContactType[];
-}
+//  interface Props {
+//    initialContacts: ContactType[];
+//  }
 
-const FilteredContact = ({ initialContacts }: Props) => {
+const FilteredContact = () => {
   const [activeFilter, setActiveFilter] = useState("name");
   const [filterText, setFilterText] = useState("");
-  const [contacts, setContacts] = useState<ContactType[]>(initialContacts);
+  const [contacts, setContacts] = useState<ContactType[]>([]);
   const [currContact, setCurrContact] = useState<ContactType>({
-    id: contacts.length,
+    id: "",
     name: "",
     phone: "",
     email: "",
@@ -57,20 +58,52 @@ const FilteredContact = ({ initialContacts }: Props) => {
     }
   });
 
-  function updateContact(updatedContact: ContactType) {
-    setContacts(
-      contacts.map((contact) =>
-        contact.id === updatedContact.id ? updatedContact : contact,
-      ),
-    );
+  useEffect(() => {
+    async function fetchContacts() {
+      const result = await axios.get("http://localhost:4000/contacts");
+      return result.data;
+    }
+
+    fetchContacts()
+      .then((data) => setContacts(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  async function updateContact(updatedContact: ContactType) {
+    try {
+      const result = await axios.put(
+        `http://localhost:4000/contacts/${updatedContact.id}`,
+        updatedContact,
+      );
+      setContacts(
+        contacts.map((contact) =>
+          contact.id === result.data.id ? result.data : contact,
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function addContact(newContact: ContactType) {
-    setContacts([...contacts, newContact]);
+  async function addContact(newContact: NewContact) {
+    try {
+      const result = await axios.post(
+        "http://localhost:4000/contacts",
+        newContact,
+      );
+      setContacts([...contacts, result.data]);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function deleteContact(id: number) {
-    setContacts(contacts.filter((contact) => contact.id !== id));
+  async function deleteContact(id: string) {
+    try {
+      const result = await axios.delete(`http://localhost:4000/contacts/${id}`);
+      setContacts(contacts.filter((contact) => contact.id !== result.data.id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   function showModal(contact: ContactType) {
@@ -85,7 +118,7 @@ const FilteredContact = ({ initialContacts }: Props) => {
 
   function handleAddButtonClick() {
     const newContact = {
-      id: contacts.length,
+      id: "",
       name: "",
       phone: "",
       email: "",

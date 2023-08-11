@@ -3,7 +3,6 @@ import { EventsContext } from "../contexts/EventsContext";
 import EventModal from "./EventModal";
 import { EventInput } from "@fullcalendar/core/index.js";
 import dayjs from "dayjs";
-//import EventModal from "./EventModal";
 
 const Events = () => {
   const events = useContext(EventsContext);
@@ -17,6 +16,7 @@ const Events = () => {
     description: "",
     allDay: true,
   });
+
   const sortedEvents = useMemo(() => {
     return sortEvents(filterEvents(events));
   }, [events]);

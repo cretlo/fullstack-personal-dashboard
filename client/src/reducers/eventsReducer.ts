@@ -1,12 +1,16 @@
 import { EventInput } from "@fullcalendar/core/index.js";
 
 export type ACTIONTYPE =
+  | { type: "fetched"; payload: EventInput[] }
   | { type: "added"; payload: EventInput }
   | { type: "updated"; payload: EventInput }
   | { type: "deleted"; payload: string };
 
 export function eventsReducer(events: EventInput[], action: ACTIONTYPE) {
   switch (action.type) {
+    case "fetched": {
+      return action.payload;
+    }
     case "added": {
       return [...events, action.payload];
     }

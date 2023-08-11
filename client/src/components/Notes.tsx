@@ -1,31 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Note as NoteType } from "../types";
 import Note from "./Note";
+import axios from "axios";
 
-interface Props {
-  initialNotes: NoteType[];
-}
+// interface Props {
+//   initialNotes: NoteType[];
+// }
 
-const Notes = ({ initialNotes }: Props) => {
-  const [notes, setNotes] = useState(initialNotes);
+const Notes = () => {
+  const [notes, setNotes] = useState<NoteType[]>([]);
   const [isNewNote, setIsNewNote] = useState(false);
   const newNote: NoteType = {
-    id: notes[notes.length - 1].id + 1,
+    id: crypto.randomUUID(),
     title: "Untitled",
     note: "",
     editorState: "",
   };
 
-  function addNote(newNote: NoteType) {
-    setNotes([...notes, newNote]);
+  useEffect(() => {
+    async function fetchNotes() {
+      const result = await axios.get("http://localhost:4000/notes");
+      return result.data;
+    }
+
+    fetchNotes()
+      .then((data) => setNotes(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  async function addNote(newNote: NoteType) {
+    console.log(typeof newNote.editorState);
+    try {
+      const result = await axios.post("http://localhost:4000/notes", newNote);
+      setNotes([...notes, result.data]);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function deleteNote(id: number) {
-    setNotes(notes.filter((note) => note.id !== id));
+  async function deleteNote(id: string) {
+    try {
+      const result = await axios.delete(`http://localhost:4000/notes/${id}`);
+      setNotes(notes.filter((note) => note.id !== result.data.id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function updateNote(newNote: NoteType) {
-    setNotes(notes.map((note) => (note.id === newNote.id ? newNote : note)));
+  async function updateNote(newNote: NoteType) {
+    try {
+      const result = await axios.put(
+        `http://localhost:4000/notes/${newNote.id}`,
+        newNote,
+      );
+      setNotes(
+        notes.map((note) =>
+          note.id === result.data.id ? result.data.id : note,
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (

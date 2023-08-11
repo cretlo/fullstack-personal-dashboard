@@ -3,6 +3,7 @@ import { EventsDispatchContext } from "../contexts/EventsContext";
 import { EventInput, DateInput } from "@fullcalendar/core/index.js";
 import { Modal } from "react-bootstrap";
 import dayjs from "dayjs";
+import axios from "axios";
 
 //interface MyEventInput extends EventInput {
 //  title: string;
@@ -54,21 +55,31 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
     }
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     if (!dispatch) return;
 
     if (isNewEvent) {
-      dispatch({
-        type: "added",
-        payload: event,
-      });
+      try {
+        const result = await axios.post("http://localhost:4000/events", event);
+        dispatch({
+          type: "added",
+          payload: result.data,
+        });
+      } catch (err) {
+        console.error(err);
+      }
     } else {
-      dispatch({
-        type: "updated",
-        payload: event,
-      });
+      try {
+        const result = await axios.put("http://localhost:4000/events", event);
+        dispatch({
+          type: "updated",
+          payload: result.data,
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
     onClose();
   }

@@ -1,12 +1,14 @@
-export interface Contact {
-  id: number;
+export type Contact = {
+  id: string;
   name: string;
   phone: string;
   email: string;
-}
+};
+
+export type NewContact = Omit<Contact, "id">;
 
 export interface Note {
-  id: number;
+  id: string;
   title: string;
   note: string;
   editorState: string;

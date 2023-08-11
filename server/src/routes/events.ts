@@ -1,8 +1,76 @@
 import express from "express";
+import db from "../db/db";
+import { events } from "../db/schema";
+import { InferModel, eq } from "drizzle-orm";
+
 const router = express.Router();
 
-router.get("/", (_, res) => {
-  res.send("Hello from /events");
+type Event = InferModel<typeof events, "select">;
+type NewEvent = InferModel<typeof events, "insert">;
+
+router.use((req, _, next) => {
+  console.log("Events route hit");
+  next();
+});
+
+router.get("/", async (_, res) => {
+  try {
+    const result: Event[] = await db.select().from(events);
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ message: "Couldn't get events" });
+  }
+});
+
+router.post("/", async (req, res) => {
+  const newEvent: NewEvent = {
+    title: req.body.title,
+    start: new Date(req.body.start),
+    end: req.body.end ? new Date(req.body.end) : null,
+    description: req.body.description,
+    allDay: req.body.allDay,
+  };
+  console.log("New Event: ", newEvent);
+
+  try {
+    const result = await db.insert(events).values(newEvent).returning();
+    console.log("Post result: ", result);
+    res.status(200).send(result[0]);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({ message: err });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  const eventId = req.params.id;
+
+  const updatedEvent: NewEvent = { ...req.body };
+
+  try {
+    const result = await db
+      .update(events)
+      .set(updatedEvent)
+      .where(eq(events.id, eventId))
+      .returning();
+    res.status(200).send(result[0]);
+  } catch (err) {
+    res.status(400).send({ message: err });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const eventId = req.params.id;
+
+  try {
+    const result = await db
+      .delete(events)
+      .where(eq(events.id, eventId))
+      .returning();
+    res.status(200).send(result);
+  } catch (err) {
+    res.status(400).send({ message: err });
+  }
 });
 
 export default router;

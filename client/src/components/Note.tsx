@@ -8,7 +8,7 @@ interface Props {
   isNewNote: boolean;
   addNote: (note: NoteType) => void;
   updateNote: (note: NoteType) => void;
-  deleteNote: (id: number) => void;
+  deleteNote: (id: string) => void;
   handleNewNote?: (isNewNote: boolean) => void;
 }
 

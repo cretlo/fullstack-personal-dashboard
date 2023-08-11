@@ -7,6 +7,8 @@ import express from "express";
 import contacts from "./routes/contacts";
 import events from "./routes/events";
 import notes from "./routes/notes";
+//Middleware
+import cors from "cors";
 
 async function main() {
   // migrations
@@ -19,6 +21,7 @@ async function main() {
   const app = express();
 
   app.use(express.json());
+  app.use(cors());
 
   app.use("/contacts", contacts);
   app.use("/events", events);
