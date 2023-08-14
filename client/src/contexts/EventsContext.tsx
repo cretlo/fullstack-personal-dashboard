@@ -50,7 +50,8 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function fetchEvents() {
-    return await axios.get("http://localhost:4000/events");
+    //return await axios.get("http://localhost:4000/events");
+    return await axios.get("/api/events");
   }
 
   return (

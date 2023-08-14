@@ -11,7 +11,7 @@ const Notes = () => {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [isNewNote, setIsNewNote] = useState(false);
   const newNote: NoteType = {
-    id: crypto.randomUUID(),
+    id: -1,
     title: "Untitled",
     note: "",
     editorState: "",
@@ -19,7 +19,7 @@ const Notes = () => {
 
   useEffect(() => {
     async function fetchNotes() {
-      const result = await axios.get("http://localhost:4000/notes");
+      const result = await axios.get("api/notes");
       return result.data;
     }
 
@@ -31,7 +31,7 @@ const Notes = () => {
   async function addNote(newNote: NoteType) {
     console.log(typeof newNote.editorState);
     try {
-      const result = await axios.post("http://localhost:4000/notes", newNote);
+      const result = await axios.post("api/notes", newNote);
       setNotes([...notes, result.data]);
     } catch (err) {
       console.error(err);
@@ -40,7 +40,7 @@ const Notes = () => {
 
   async function deleteNote(id: string) {
     try {
-      const result = await axios.delete(`http://localhost:4000/notes/${id}`);
+      const result = await axios.delete(`api/notes/${id}`);
       setNotes(notes.filter((note) => note.id !== result.data.id));
     } catch (err) {
       console.error(err);
@@ -49,10 +49,7 @@ const Notes = () => {
 
   async function updateNote(newNote: NoteType) {
     try {
-      const result = await axios.put(
-        `http://localhost:4000/notes/${newNote.id}`,
-        newNote,
-      );
+      const result = await axios.put(`api/notes/${newNote.id}`, newNote);
       setNotes(
         notes.map((note) =>
           note.id === result.data.id ? result.data.id : note,

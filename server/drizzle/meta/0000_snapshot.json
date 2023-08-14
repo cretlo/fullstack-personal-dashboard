@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "40b3381f-fd32-4da5-9eca-2e74211ba65e",
+  "id": "49da3409-5aeb-4412-a3c0-cc9c48b257ae",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "contacts": {
@@ -10,10 +10,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "serial",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -45,7 +44,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -53,13 +52,13 @@
           "name": "title",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "start": {
           "name": "start",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "end": {
           "name": "end",
@@ -71,8 +70,7 @@
           "name": "description",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
-          "default": "''"
+          "notNull": false
         },
         "allDay": {
           "name": "allDay",
@@ -93,7 +91,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -110,8 +108,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "editor": {
-          "name": "editor",
+        "editor_state": {
+          "name": "editor_state",
           "type": "text",
           "primaryKey": false,
           "notNull": false

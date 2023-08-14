@@ -36,7 +36,6 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     };
     try {
         const result = yield db_1.default.insert(schema_1.events).values(newEvent).returning();
-        console.log("Post result: ", result);
         res.status(200).send(result[0]);
     }
     catch (err) {
@@ -45,7 +44,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const eventId = req.params.id;
+    const eventId = Number(req.params.id);
     const updatedEvent = Object.assign({}, req.body);
     try {
         const result = yield db_1.default
@@ -60,7 +59,7 @@ router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const eventId = req.params.id;
+    const eventId = Number(req.params.id);
     try {
         const result = yield db_1.default
             .delete(schema_1.events)

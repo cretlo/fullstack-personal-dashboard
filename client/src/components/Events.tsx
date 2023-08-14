@@ -9,7 +9,7 @@ const Events = () => {
   const [isNewEvent, setIsNewEvent] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [currEvent, setCurrEvent] = useState<EventInput>({
-    id: crypto.randomUUID(),
+    id: "0",
     title: "",
     start: "",
     end: "",
@@ -56,7 +56,7 @@ const Events = () => {
 
   function handleAddButtonClick() {
     const newEvent: EventInput = {
-      id: crypto.randomUUID(),
+      id: "0",
       title: "",
       start: "",
       end: "",

@@ -1,69 +1,74 @@
 import express from "express";
 import db from "../db/db";
 import { contacts } from "../db/schema";
-import { InferModel, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
+import { Contact, NewContact } from "../db/schema";
+import { authenticate } from "../middleware/auth";
+import { validateContactSchema } from "../middleware/validation";
 
 const router = express.Router();
 
-type Contact = InferModel<typeof contacts, "select">;
-//type NewContact = Omit<InferModel<typeof contacts, "insert">, "id">;
-type NewContact = InferModel<typeof contacts, "insert">;
-
-router.get("/", async (_, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
-    const result: Contact[] = await db.select().from(contacts);
-    res.send(result);
+    const result: Contact[] = await db
+      .select()
+      .from(contacts)
+      .where(eq(contacts.userId, req.user.id));
+    return res.status(200).json(result);
   } catch {
-    res.send({ message: "Couldn't get contacts" });
+    return res.send({ message: "Couldn't get contacts" });
   }
 });
 
-router.post("/", async (req, res) => {
-  const newContact: NewContact = {
-    name: req.body.name,
-    phone: req.body.phone,
-    email: req.body.email,
-  };
-
+router.post("/", authenticate, validateContactSchema, async (req, res) => {
+  const newContact: NewContact = req.validatedContactData;
   try {
     const result = await db.insert(contacts).values(newContact).returning();
-    res.status(200).send(result[0]);
-  } catch {
-    res.status(400).send({ message: "Couldn't insert contact" });
+    return res.status(200).send(result[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send({ message: "Couldn't insert contact" });
   }
 });
 
-router.put("/:id", async (req, res) => {
-  const contactId = req.params.id;
-  console.log(contactId);
+router.put("/:id", authenticate, validateContactSchema, async (req, res) => {
+  const contactId = Number(req.params.id);
+  const updatedContact: NewContact = req.validatedContactData;
 
   try {
     const result = await db
       .update(contacts)
-      .set(req.body)
+      .set(updatedContact)
       .where(eq(contacts.id, contactId))
       .returning();
-    res.status(200).send(result[0]);
+
+    if (!result[0]) {
+      return res.status(400).json({ message: "Couldn't update contact" });
+    }
+
+    return res.status(200).send(result[0]);
   } catch (err) {
-    res.status(400).send(err);
+    console.error(err);
+    return res.status(400).send(err);
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  const contactId = req.params.id;
+router.delete("/:id", authenticate, async (req, res) => {
+  const contactId = Number(req.params.id);
+  const userId = req.user.id;
 
   if (!req.params.id) {
-    res.status(400).send({ message: "Must supply a contact" });
+    return res.status(400).send({ message: "Must supply a contact" });
   }
 
   try {
     const result = await db
       .delete(contacts)
-      .where(eq(contacts.id, contactId))
+      .where(eq(contacts.id, contactId) && eq(contacts.userId, userId))
       .returning();
-    res.status(200).send(result[0]);
+    return res.status(200).send(result[0]);
   } catch (err) {
-    res.status(400).send(err);
+    return res.status(400).send(err);
   }
 });
 

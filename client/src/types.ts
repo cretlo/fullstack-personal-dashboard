@@ -1,5 +1,5 @@
 export type Contact = {
-  id: string;
+  id: number;
   name: string;
   phone: string;
   email: string;
@@ -8,7 +8,7 @@ export type Contact = {
 export type NewContact = Omit<Contact, "id">;
 
 export interface Note {
-  id: string;
+  id: number;
   title: string;
   note: string;
   editorState: string;

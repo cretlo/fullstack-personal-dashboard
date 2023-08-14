@@ -18,6 +18,7 @@ const EventCalendar = () => {
     if (event.end) {
       return {
         ...event,
+        id: String(event.id),
         end: dayjs(event.end?.toString())
           .add(1, "day")
           .toISOString(),

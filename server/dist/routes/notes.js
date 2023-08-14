@@ -43,7 +43,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const noteId = req.params.id;
+    const noteId = Number(req.params.id);
     const newNote = Object.assign({}, req.body);
     try {
         const result = yield db_1.default
@@ -59,8 +59,7 @@ router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const noteId = req.params.id;
-    console.log("Delete id: ", noteId);
+    const noteId = Number(req.params.id);
     try {
         const result = yield db_1.default
             .delete(schema_1.notes)

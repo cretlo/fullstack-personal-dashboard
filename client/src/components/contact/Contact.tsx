@@ -3,7 +3,7 @@ import { Contact as ContactType } from "../../types";
 interface Props {
   contact: ContactType;
   showModal: (contact: ContactType) => void;
-  deleteContact: (id: string) => void;
+  deleteContact: (id: number) => void;
 }
 
 const Contact = ({ contact, showModal, deleteContact }: Props) => {

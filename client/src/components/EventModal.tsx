@@ -62,7 +62,7 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
 
     if (isNewEvent) {
       try {
-        const result = await axios.post("http://localhost:4000/events", event);
+        const result = await axios.post("api/events", event);
         dispatch({
           type: "added",
           payload: result.data,
@@ -72,7 +72,7 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
       }
     } else {
       try {
-        const result = await axios.put("http://localhost:4000/events", event);
+        const result = await axios.put("api/events", event);
         dispatch({
           type: "updated",
           payload: result.data,

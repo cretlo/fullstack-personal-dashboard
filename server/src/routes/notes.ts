@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  const noteId = req.params.id;
+  const noteId = Number(req.params.id);
   const newNote: NewNote = { ...req.body };
 
   try {
@@ -52,9 +52,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-  const noteId = req.params.id;
-
-  console.log("Delete id: ", noteId);
+  const noteId = Number(req.params.id);
 
   try {
     const result = await db

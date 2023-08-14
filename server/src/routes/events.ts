@@ -28,7 +28,6 @@ router.post("/", async (req, res) => {
 
   try {
     const result = await db.insert(events).values(newEvent).returning();
-    console.log("Post result: ", result);
     res.status(200).send(result[0]);
   } catch (err) {
     console.log(err);
@@ -37,7 +36,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  const eventId = req.params.id;
+  const eventId = Number(req.params.id);
 
   const updatedEvent: NewEvent = { ...req.body };
 
@@ -54,7 +53,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-  const eventId = req.params.id;
+  const eventId = Number(req.params.id);
 
   try {
     const result = await db

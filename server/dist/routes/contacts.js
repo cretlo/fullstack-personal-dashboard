@@ -16,59 +16,66 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../db/db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
+const auth_1 = require("../middleware/auth");
+const validation_1 = require("../middleware/validation");
 const router = express_1.default.Router();
-router.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", auth_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield db_1.default.select().from(schema_1.contacts);
-        res.send(result);
+        const result = yield db_1.default
+            .select()
+            .from(schema_1.contacts)
+            .where((0, drizzle_orm_1.eq)(schema_1.contacts.userId, req.user.id));
+        return res.status(200).json(result);
     }
     catch (_a) {
-        res.send({ message: "Couldn't get contacts" });
+        return res.send({ message: "Couldn't get contacts" });
     }
 }));
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newContact = {
-        name: req.body.name,
-        phone: req.body.phone,
-        email: req.body.email,
-    };
+router.post("/", auth_1.authenticate, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newContact = req.validatedContactData;
     try {
         const result = yield db_1.default.insert(schema_1.contacts).values(newContact).returning();
-        res.status(200).send(result[0]);
+        return res.status(200).send(result[0]);
     }
-    catch (_b) {
-        res.status(400).send({ message: "Couldn't insert contact" });
+    catch (err) {
+        console.error(err);
+        return res.status(400).send({ message: "Couldn't insert contact" });
     }
 }));
-router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const contactId = req.params.id;
-    console.log(contactId);
+router.put("/:id", auth_1.authenticate, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const contactId = Number(req.params.id);
+    const updatedContact = req.validatedContactData;
     try {
         const result = yield db_1.default
             .update(schema_1.contacts)
-            .set(req.body)
+            .set(updatedContact)
             .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId))
             .returning();
-        res.status(200).send(result[0]);
+        if (!result[0]) {
+            return res.status(400).json({ message: "Couldn't update contact" });
+        }
+        return res.status(200).send(result[0]);
     }
     catch (err) {
-        res.status(400).send(err);
+        console.error(err);
+        return res.status(400).send(err);
     }
 }));
-router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const contactId = req.params.id;
+router.delete("/:id", auth_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const contactId = Number(req.params.id);
+    const userId = req.user.id;
     if (!req.params.id) {
-        res.status(400).send({ message: "Must supply a contact" });
+        return res.status(400).send({ message: "Must supply a contact" });
     }
     try {
         const result = yield db_1.default
             .delete(schema_1.contacts)
-            .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId))
+            .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId) && (0, drizzle_orm_1.eq)(schema_1.contacts.userId, userId))
             .returning();
-        res.status(200).send(result[0]);
+        return res.status(200).send(result[0]);
     }
     catch (err) {
-        res.status(400).send(err);
+        return res.status(400).send(err);
     }
 }));
 exports.default = router;
