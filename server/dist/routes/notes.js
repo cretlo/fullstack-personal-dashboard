@@ -18,9 +18,12 @@ const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
 const authorize_1 = require("../middleware/authorize");
 const router = express_1.default.Router();
-router.get("/", authorize_1.authorize, (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield db_1.default.select().from(schema_1.notes);
+        const result = yield db_1.default
+            .select()
+            .from(schema_1.notes)
+            .where((0, drizzle_orm_1.eq)(schema_1.notes.userId, req.user.id));
         res.status(200).send(result);
     }
     catch (err) {

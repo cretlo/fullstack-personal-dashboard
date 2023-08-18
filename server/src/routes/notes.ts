@@ -9,9 +9,12 @@ const router = express.Router();
 type Note = InferModel<typeof notes, "select">;
 type NewNote = InferModel<typeof notes, "insert">;
 
-router.get("/", authorize, async (_, res) => {
+router.get("/", authorize, async (req, res) => {
   try {
-    const result: Note[] = await db.select().from(notes);
+    const result: Note[] = await db
+      .select()
+      .from(notes)
+      .where(eq(notes.userId, req.user.id));
     res.status(200).send(result);
   } catch (err) {
     console.error(err);

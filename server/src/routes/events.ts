@@ -9,9 +9,12 @@ const router = express.Router();
 type Event = InferModel<typeof events, "select">;
 type NewEvent = InferModel<typeof events, "insert">;
 
-router.get("/", authorize, async (_, res) => {
+router.get("/", authorize, async (req, res) => {
   try {
-    const result: Event[] = await db.select().from(events);
+    const result: Event[] = await db
+      .select()
+      .from(events)
+      .where(eq(events.id, req.user.id));
     res.status(200).send(result);
   } catch (err) {
     res.send({ message: "Couldn't get events" });
