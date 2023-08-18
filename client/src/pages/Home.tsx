@@ -1,51 +1,6 @@
-import Notes from "../components/Notes";
+import Notes from "../components/notes/Notes";
 import FilteredContact from "../components/contact/FilteredContacts";
-import Events from "../components/Events";
-
-//const initalNotes = [
-//  {
-//    id: 0,
-//    title: "First note",
-//    note: "This is a bunch of random text",
-//    editorState: "",
-//    activeStyleSet: [],
-//  },
-//  {
-//    id: 1,
-//    title: "Second note",
-//    note: "This is a bunch of random text",
-//    editorState: "",
-//    activeStyleSet: [],
-//  },
-//  {
-//    id: 2,
-//    title: "Third note",
-//    note: "This is a bunch of random text",
-//    editorState: "",
-//    activeStyleSet: [],
-//  },
-//];
-//
-//const initialContacts = [
-//  {
-//    id: 0,
-//    name: "Dale Diddler",
-//    phone: "307-555-5555",
-//    email: "thedale@gmail.com",
-//  },
-//  {
-//    id: 1,
-//    name: "Tina Tickler",
-//    phone: "307-555-5555",
-//    email: "tinapower@gmail.com",
-//  },
-//  {
-//    id: 2,
-//    name: "Timothy Tamalie",
-//    phone: "307-555-5555",
-//    email: "timtim420@gmail.com",
-//  },
-//];
+import Events from "../components/events/Events";
 
 const Home = () => {
   return (

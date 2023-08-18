@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Note as NoteType } from "../types";
+import { Note as NoteType } from "../../types";
 import Note from "./Note";
 import axios from "axios";
 
@@ -37,7 +37,7 @@ const Notes = () => {
     }
   }
 
-  async function deleteNote(id: string) {
+  async function deleteNote(id: number) {
     try {
       const result = await axios.delete(`api/notes/${id}`);
       setNotes(notes.filter((note) => note.id !== result.data.id));

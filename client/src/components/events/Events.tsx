@@ -1,5 +1,5 @@
 import { useContext, useState, useMemo } from "react";
-import { EventsContext } from "../contexts/EventsContext";
+import { EventsContext } from "../../contexts/EventsContext";
 import EventModal from "./EventModal";
 import { EventInput } from "@fullcalendar/core/index.js";
 import dayjs from "dayjs";

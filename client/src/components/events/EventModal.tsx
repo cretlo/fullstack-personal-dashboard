@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, useContext, FormEvent } from "react";
-import { EventsDispatchContext } from "../contexts/EventsContext";
+import { EventsDispatchContext } from "../../contexts/EventsContext";
 import { EventInput, DateInput } from "@fullcalendar/core/index.js";
 import { Modal } from "react-bootstrap";
 import dayjs from "dayjs";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Note as NoteType } from "../types";
+import { Note as NoteType } from "../../types";
 import Modal from "react-bootstrap/Modal";
 import NoteEditor from "./NoteEditor";
 
@@ -8,7 +8,7 @@ interface Props {
   isNewNote: boolean;
   addNote: (note: NoteType) => void;
   updateNote: (note: NoteType) => void;
-  deleteNote: (id: string) => void;
+  deleteNote: (id: number) => void;
   handleNewNote?: (isNewNote: boolean) => void;
 }
 
