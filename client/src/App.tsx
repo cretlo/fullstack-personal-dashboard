@@ -29,32 +29,18 @@ function App() {
     <>
       <AuthProvider>
         <AlertProvider>
-          <EventsProvider>
-            <BrowserRouter>
-              <AppNavbar />
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <PrivateRoute>
-                      <Home />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/calendar"
-                  element={
-                    <PrivateRoute>
-                      <EventCalendar />
-                    </PrivateRoute>
-                  }
-                />
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-              </Routes>
-            </BrowserRouter>
-            <Alerts />
-          </EventsProvider>
+          <BrowserRouter>
+            <AppNavbar />
+            <Routes>
+              <Route path="/" element={<PrivateRoute />}>
+                <Route path="/" element={<Home />} />
+                <Route path="calendar" element={<EventCalendar />} />
+              </Route>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </BrowserRouter>
+          <Alerts />
         </AlertProvider>
       </AuthProvider>
     </>
