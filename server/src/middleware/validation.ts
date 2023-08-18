@@ -21,9 +21,10 @@ export function validateUserSchema(
     next();
   } catch (err) {
     if (err instanceof ZodError) {
-      res.status(400).json({ errors: err.issues });
+      console.log("Validation failed");
+      res.status(400).json({ message: err.issues[0].message });
     } else {
-      res.status(500).json({ error: "Something happened" });
+      res.status(500).json({ message: "Something happened" });
     }
   }
 }
@@ -49,9 +50,35 @@ export function validateContactSchema(
     next();
   } catch (err) {
     if (err instanceof ZodError) {
-      res.status(400).json({ errors: err.issues });
+      res.status(400).json({ message: err.issues[0].message });
     } else {
-      res.status(500).json({ error: "Something happened" });
+      res.status(500).json({ message: "Something happened" });
+    }
+  }
+}
+
+/*
+ * Login middleware
+ */
+const authSchema = z.object({
+  username: z.string().nonempty(),
+  password: z.string().min(6),
+});
+
+export function validateAuthSchema(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const authData = authSchema.parse(req.body);
+    req.validatedAuthData = authData;
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      res.status(400).json({ message: err.issues[0].message });
+    } else {
+      res.status(500).json({ message: "Something happended" });
     }
   }
 }

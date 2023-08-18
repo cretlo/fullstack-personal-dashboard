@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { EventsContext } from "../contexts/EventsContext";
-import AppNavbar from "../components/AppNavbar";
 // Full calendar
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -38,7 +37,6 @@ const EventCalendar = () => {
 
   return (
     <>
-      <AppNavbar />
       <div className="container">
         <FullCalendar
           dateClick={handleClick}

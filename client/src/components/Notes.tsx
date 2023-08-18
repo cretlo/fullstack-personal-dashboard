@@ -29,7 +29,6 @@ const Notes = () => {
   }, []);
 
   async function addNote(newNote: NoteType) {
-    console.log(typeof newNote.editorState);
     try {
       const result = await axios.post("api/notes", newNote);
       setNotes([...notes, result.data]);

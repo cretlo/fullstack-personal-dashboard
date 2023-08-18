@@ -3,12 +3,12 @@ import db from "../db/db";
 import { contacts } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { Contact, NewContact } from "../db/schema";
-import { authenticate } from "../middleware/auth";
+import { authorize } from "../middleware/authorize";
 import { validateContactSchema } from "../middleware/validation";
 
 const router = express.Router();
 
-router.get("/", authenticate, async (req, res) => {
+router.get("/", authorize, async (req, res) => {
   try {
     const result: Contact[] = await db
       .select()
@@ -20,7 +20,7 @@ router.get("/", authenticate, async (req, res) => {
   }
 });
 
-router.post("/", authenticate, validateContactSchema, async (req, res) => {
+router.post("/", authorize, validateContactSchema, async (req, res) => {
   const newContact: NewContact = req.validatedContactData;
   try {
     const result = await db.insert(contacts).values(newContact).returning();
@@ -31,7 +31,7 @@ router.post("/", authenticate, validateContactSchema, async (req, res) => {
   }
 });
 
-router.put("/:id", authenticate, validateContactSchema, async (req, res) => {
+router.put("/:id", authorize, validateContactSchema, async (req, res) => {
   const contactId = Number(req.params.id);
   const updatedContact: NewContact = req.validatedContactData;
 
@@ -53,7 +53,7 @@ router.put("/:id", authenticate, validateContactSchema, async (req, res) => {
   }
 });
 
-router.delete("/:id", authenticate, async (req, res) => {
+router.delete("/:id", authorize, async (req, res) => {
   const contactId = Number(req.params.id);
   const userId = req.user.id;
 

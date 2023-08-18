@@ -16,10 +16,10 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../db/db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
-const auth_1 = require("../middleware/auth");
+const authorize_1 = require("../middleware/authorize");
 const validation_1 = require("../middleware/validation");
 const router = express_1.default.Router();
-router.get("/", auth_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield db_1.default
             .select()
@@ -31,7 +31,7 @@ router.get("/", auth_1.authenticate, (req, res) => __awaiter(void 0, void 0, voi
         return res.send({ message: "Couldn't get contacts" });
     }
 }));
-router.post("/", auth_1.authenticate, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", authorize_1.authorize, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newContact = req.validatedContactData;
     try {
         const result = yield db_1.default.insert(schema_1.contacts).values(newContact).returning();
@@ -42,7 +42,7 @@ router.post("/", auth_1.authenticate, validation_1.validateContactSchema, (req, 
         return res.status(400).send({ message: "Couldn't insert contact" });
     }
 }));
-router.put("/:id", auth_1.authenticate, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", authorize_1.authorize, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const contactId = Number(req.params.id);
     const updatedContact = req.validatedContactData;
     try {
@@ -61,7 +61,7 @@ router.put("/:id", auth_1.authenticate, validation_1.validateContactSchema, (req
         return res.status(400).send(err);
     }
 }));
-router.delete("/:id", auth_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const contactId = Number(req.params.id);
     const userId = req.user.id;
     if (!req.params.id) {

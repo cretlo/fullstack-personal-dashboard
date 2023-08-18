@@ -1,31 +1,30 @@
-import AppNavbar from "../components/AppNavbar";
 import Notes from "../components/Notes";
 import FilteredContact from "../components/contact/FilteredContacts";
 import Events from "../components/Events";
 
-const initalNotes = [
-  {
-    id: 0,
-    title: "First note",
-    note: "This is a bunch of random text",
-    editorState: "",
-    activeStyleSet: [],
-  },
-  {
-    id: 1,
-    title: "Second note",
-    note: "This is a bunch of random text",
-    editorState: "",
-    activeStyleSet: [],
-  },
-  {
-    id: 2,
-    title: "Third note",
-    note: "This is a bunch of random text",
-    editorState: "",
-    activeStyleSet: [],
-  },
-];
+//const initalNotes = [
+//  {
+//    id: 0,
+//    title: "First note",
+//    note: "This is a bunch of random text",
+//    editorState: "",
+//    activeStyleSet: [],
+//  },
+//  {
+//    id: 1,
+//    title: "Second note",
+//    note: "This is a bunch of random text",
+//    editorState: "",
+//    activeStyleSet: [],
+//  },
+//  {
+//    id: 2,
+//    title: "Third note",
+//    note: "This is a bunch of random text",
+//    editorState: "",
+//    activeStyleSet: [],
+//  },
+//];
 //
 //const initialContacts = [
 //  {
@@ -51,7 +50,6 @@ const initalNotes = [
 const Home = () => {
   return (
     <>
-      <AppNavbar />
       <div className="container">
         <div className="row">
           <div className="col-12 col-lg mb-3">

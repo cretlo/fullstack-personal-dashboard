@@ -20,8 +20,8 @@ const express_1 = __importDefault(require("express"));
 const users_1 = __importDefault(require("./routes/users"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const contacts_1 = __importDefault(require("./routes/contacts"));
-//import events from "./routes/events";
-//import notes from "./routes/notes";
+const events_1 = __importDefault(require("./routes/events"));
+const notes_1 = __importDefault(require("./routes/notes"));
 //Middleware
 const cors_1 = __importDefault(require("cors"));
 function main() {
@@ -35,8 +35,8 @@ function main() {
         app.use("/api/users", users_1.default);
         app.use("/api/auth", auth_1.default);
         app.use("/api/contacts", contacts_1.default);
-        //app.use("/api/events", events);
-        //app.use("/api/notes", notes);
+        app.use("/api/events", events_1.default);
+        app.use("/api/notes", notes_1.default);
         app.listen(4000, () => {
             console.log("Server listening on port 4000");
         });

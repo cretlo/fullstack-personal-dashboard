@@ -2,13 +2,14 @@ import express from "express";
 import db from "../db/db";
 import { notes } from "../db/schema";
 import { InferModel, eq } from "drizzle-orm";
+import { authorize } from "../middleware/authorize";
 
 const router = express.Router();
 
 type Note = InferModel<typeof notes, "select">;
 type NewNote = InferModel<typeof notes, "insert">;
 
-router.get("/", async (_, res) => {
+router.get("/", authorize, async (_, res) => {
   try {
     const result: Note[] = await db.select().from(notes);
     res.status(200).send(result);
@@ -18,7 +19,7 @@ router.get("/", async (_, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authorize, async (req, res) => {
   const newNote: NewNote = {
     title: req.body.title,
     note: req.body.note,
@@ -34,7 +35,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authorize, async (req, res) => {
   const noteId = Number(req.params.id);
   const newNote: NewNote = { ...req.body };
 
@@ -51,7 +52,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorize, async (req, res) => {
   const noteId = Number(req.params.id);
 
   try {

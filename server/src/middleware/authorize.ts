@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
-export function authenticate(req: Request, res: Response, next: NextFunction) {
+export function authorize(req: Request, res: Response, next: NextFunction) {
   const token = req.header("x-auth-token");
 
   if (!token) {

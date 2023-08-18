@@ -40,10 +40,10 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetchEvents()
-      .then((result) => {
+      .then((res) => {
         dispatch({
           type: "fetched",
-          payload: result.data,
+          payload: res.data,
         });
       })
       .catch((err) => console.log(err));

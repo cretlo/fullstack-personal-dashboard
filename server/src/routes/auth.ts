@@ -5,35 +5,17 @@ import { users } from "../db/schema";
 import { InferModel, eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { authenticate } from "../middleware/auth";
+import { authorize } from "../middleware/authorize";
+import { validateAuthSchema } from "../middleware/validation";
 
 const router = express.Router();
-
-const authSchema = z.object({
-  username: z.string().nonempty(),
-  password: z.string().min(6),
-});
-
-function validateAuthSchema(req: Request, res: Response, next: NextFunction) {
-  try {
-    const authData = authSchema.parse(req.body);
-    req.validatedAuthData = authData;
-    next();
-  } catch (err) {
-    if (err instanceof ZodError) {
-      res.status(400).json({ error: err.issues });
-    } else {
-      res.status(500).json({ error: "Something happended" });
-    }
-  }
-}
 
 /*
  * @route    GET api/auth
  * @desc     Get logged in user
  * @access   Private
  */
-router.get("/", authenticate, async (req, res) => {
+router.get("/", authorize, async (req, res) => {
   const userId = Number(req.user.id);
   try {
     const queriedUsers = await db
@@ -51,7 +33,7 @@ router.get("/", authenticate, async (req, res) => {
 
 /*
  * @route    POST api/auth
- * @desc     Auth user and get jwt
+ * @desc     (Login) Auth user and get jwt
  * @access   Public
  */
 router.post("/", validateAuthSchema, async (req, res) => {
@@ -97,7 +79,7 @@ router.post("/", validateAuthSchema, async (req, res) => {
     );
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

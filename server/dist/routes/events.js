@@ -16,8 +16,9 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../db/db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
+const authorize_1 = require("../middleware/authorize");
 const router = express_1.default.Router();
-router.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", authorize_1.authorize, (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield db_1.default.select().from(schema_1.events);
         res.status(200).send(result);
@@ -26,7 +27,7 @@ router.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.send({ message: "Couldn't get events" });
     }
 }));
-router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newEvent = {
         title: req.body.title,
         start: new Date(req.body.start),
@@ -43,7 +44,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(400).send({ message: err });
     }
 }));
-router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const eventId = Number(req.params.id);
     const updatedEvent = Object.assign({}, req.body);
     try {
@@ -58,7 +59,7 @@ router.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(400).send({ message: err });
     }
 }));
-router.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const eventId = Number(req.params.id);
     try {
         const result = yield db_1.default

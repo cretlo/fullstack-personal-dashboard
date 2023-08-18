@@ -2,13 +2,14 @@ import express from "express";
 import db from "../db/db";
 import { events } from "../db/schema";
 import { InferModel, eq } from "drizzle-orm";
+import { authorize } from "../middleware/authorize";
 
 const router = express.Router();
 
 type Event = InferModel<typeof events, "select">;
 type NewEvent = InferModel<typeof events, "insert">;
 
-router.get("/", async (_, res) => {
+router.get("/", authorize, async (_, res) => {
   try {
     const result: Event[] = await db.select().from(events);
     res.status(200).send(result);
@@ -17,7 +18,7 @@ router.get("/", async (_, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authorize, async (req, res) => {
   const newEvent: NewEvent = {
     title: req.body.title,
     start: new Date(req.body.start),
@@ -35,7 +36,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authorize, async (req, res) => {
   const eventId = Number(req.params.id);
 
   const updatedEvent: NewEvent = { ...req.body };
@@ -52,7 +53,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorize, async (req, res) => {
   const eventId = Number(req.params.id);
 
   try {
