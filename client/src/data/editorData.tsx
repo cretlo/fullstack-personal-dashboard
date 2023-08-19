@@ -111,3 +111,30 @@ export const initialContacts = [
     email: "timtim420@gmail.com",
   },
 ];
+
+export const initialEvents = [
+  {
+    id: crypto.randomUUID(),
+    title: "First event",
+    start: "2023-08-10T00:00:00Z",
+    end: "",
+    description: "Hello there",
+    allDay: true,
+  },
+  {
+    id: "1",
+    title: "Second event",
+    start: "2023-08-08T03:08:32.290Z",
+    end: "",
+    description: "",
+    allDay: false,
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "Third event",
+    start: "2023-08-07T06:40:00Z",
+    end: "",
+    description: "",
+    allDay: false,
+  },
+];

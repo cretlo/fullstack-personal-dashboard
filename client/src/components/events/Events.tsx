@@ -12,7 +12,7 @@ const Events = () => {
     id: "0",
     title: "",
     start: "",
-    end: "",
+    end: undefined,
     description: "",
     allDay: true,
   });
@@ -59,7 +59,7 @@ const Events = () => {
       id: "0",
       title: "",
       start: "",
-      end: "",
+      end: undefined,
       description: "",
       allDay: true,
     };

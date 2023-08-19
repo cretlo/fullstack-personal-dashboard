@@ -1,58 +1,39 @@
 import { Dispatch, createContext, useReducer, useEffect } from "react";
 import { EventInput } from "@fullcalendar/core/index.js";
 import { ACTIONTYPE, eventsReducer } from "../reducers/eventsReducer";
-import axios from "axios";
+//import axios from "axios";
+import { useAxiosContext } from "./AxiosContext";
 
 export const EventsContext = createContext<EventInput[]>([]);
 export const EventsDispatchContext = createContext<Dispatch<ACTIONTYPE> | null>(
   null,
 );
 
-//const initialEvents = [
-//  {
-//    id: crypto.randomUUID(),
-//    title: "First event",
-//    start: "2023-08-10T00:00:00Z",
-//    end: "",
-//    description: "Hello there",
-//    allDay: true,
-//  },
-//  {
-//    id: "1",
-//    title: "Second event",
-//    start: "2023-08-08T03:08:32.290Z",
-//    end: "",
-//    description: "",
-//    allDay: false,
-//  },
-//  {
-//    id: crypto.randomUUID(),
-//    title: "Third event",
-//    start: "2023-08-07T06:40:00Z",
-//    end: "",
-//    description: "",
-//    allDay: false,
-//  },
-//];
-
 export function EventsProvider({ children }: { children: React.ReactNode }) {
   const [events, dispatch] = useReducer(eventsReducer, []);
+  const { customAxios } = useAxiosContext();
 
   useEffect(() => {
-    fetchEvents()
-      .then((res) => {
-        dispatch({
-          type: "fetched",
-          payload: res.data,
-        });
-      })
-      .catch((err) => console.log(err));
+    //fetchEvents()
+    //  .then((res) => {
+    //    dispatch({
+    //      type: "fetched",
+    //      payload: res.data,
+    //    });
+    //  })
+    //  .catch((err) => console.log(err));
+    customAxios.get("api/events").then((res) =>
+      dispatch({
+        type: "fetched",
+        payload: res.data,
+      }),
+    );
   }, []);
 
-  async function fetchEvents() {
-    //return await axios.get("http://localhost:4000/events");
-    return await axios.get("/api/events");
-  }
+  // async function fetchEvents() {
+  //   //return await axios.get("http://localhost:4000/events");
+  //   return await axios.get("/api/events");
+  // }
 
   return (
     <EventsContext.Provider value={events}>

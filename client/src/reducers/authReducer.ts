@@ -39,7 +39,6 @@ export default function authReducer(
     case "login_failed":
     case "register_failed": {
       return {
-        token: null,
         user: null,
         isAuthenticated: false,
         isLoading: false,

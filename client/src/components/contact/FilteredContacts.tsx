@@ -6,7 +6,8 @@ import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import FormControl from "react-bootstrap/FormControl";
 import { Contact as ContactType, NewContact } from "../../types";
 import ContactModal from "./ContactModal";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { useAxiosContext } from "../../contexts/AxiosContext";
 
 //  interface Props {
 //    initialContacts: ContactType[];
@@ -24,6 +25,8 @@ const FilteredContact = () => {
   });
   const [isNewContact, setIsNewContact] = useState(false);
   const [show, setShow] = useState(false);
+  const axiosContext = useAxiosContext();
+  const { customAxios } = axiosContext;
 
   const filteredContacts = contacts.map((contact) => {
     const contactComponent = (
@@ -60,8 +63,8 @@ const FilteredContact = () => {
 
   useEffect(() => {
     async function fetchContacts() {
-      const result = await axios.get("api/contacts");
-      return result.data;
+      const res = await customAxios.get("api/contacts");
+      return res.data;
     }
 
     fetchContacts()
@@ -71,13 +74,13 @@ const FilteredContact = () => {
 
   async function updateContact(updatedContact: ContactType) {
     try {
-      const result = await axios.put(
+      const res = await customAxios.put(
         `api/contacts/${updatedContact.id}`,
         updatedContact,
       );
       setContacts(
         contacts.map((contact) =>
-          contact.id === result.data.id ? result.data : contact,
+          contact.id === res.data.id ? res.data : contact,
         ),
       );
     } catch (err) {
@@ -87,8 +90,8 @@ const FilteredContact = () => {
 
   async function addContact(newContact: NewContact) {
     try {
-      const result = await axios.post("api/contacts", newContact);
-      setContacts([...contacts, result.data]);
+      const res = await customAxios.post("api/contacts", newContact);
+      setContacts([...contacts, res.data]);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.error(err.response?.data);
@@ -100,8 +103,8 @@ const FilteredContact = () => {
 
   async function deleteContact(id: number) {
     try {
-      const result = await axios.delete(`api/contacts/${id}`);
-      setContacts(contacts.filter((contact) => contact.id !== result.data.id));
+      const res = await customAxios.delete(`api/contacts/${id}`);
+      setContacts(contacts.filter((contact) => contact.id !== res.data.id));
     } catch (err) {
       console.error(err);
     }

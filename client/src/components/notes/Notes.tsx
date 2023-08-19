@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Note as NoteType } from "../../types";
 import Note from "./Note";
-import axios from "axios";
+//import axios from "axios";
+import { useAxiosContext } from "../../contexts/AxiosContext";
 
 // interface Props {
 //   initialNotes: NoteType[];
@@ -10,6 +11,7 @@ import axios from "axios";
 const Notes = () => {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [isNewNote, setIsNewNote] = useState(false);
+  const { customAxios } = useAxiosContext();
   const newNote: NoteType = {
     id: -1,
     title: "Untitled",
@@ -18,19 +20,18 @@ const Notes = () => {
   };
 
   useEffect(() => {
-    async function fetchNotes() {
-      const result = await axios.get("api/notes");
-      return result.data;
-    }
-
-    fetchNotes()
-      .then((data) => setNotes(data))
+    customAxios
+      .get("api/notes")
+      .then((res) => {
+        setNotes(res.data);
+        console.log(res.data);
+      })
       .catch((err) => console.error(err));
   }, []);
 
   async function addNote(newNote: NoteType) {
     try {
-      const result = await axios.post("api/notes", newNote);
+      const result = await customAxios.post("api/notes", newNote);
       setNotes([...notes, result.data]);
     } catch (err) {
       console.error(err);
@@ -39,7 +40,7 @@ const Notes = () => {
 
   async function deleteNote(id: number) {
     try {
-      const result = await axios.delete(`api/notes/${id}`);
+      const result = await customAxios.delete(`api/notes/${id}`);
       setNotes(notes.filter((note) => note.id !== result.data.id));
     } catch (err) {
       console.error(err);
@@ -48,7 +49,7 @@ const Notes = () => {
 
   async function updateNote(newNote: NoteType) {
     try {
-      const result = await axios.put(`api/notes/${newNote.id}`, newNote);
+      const result = await customAxios.put(`api/notes/${newNote.id}`, newNote);
       setNotes(
         notes.map((note) =>
           note.id === result.data.id ? result.data.id : note,

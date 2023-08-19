@@ -3,7 +3,8 @@ import { EventsDispatchContext } from "../../contexts/EventsContext";
 import { EventInput, DateInput } from "@fullcalendar/core/index.js";
 import { Modal } from "react-bootstrap";
 import dayjs from "dayjs";
-import axios from "axios";
+//import axios from "axios";
+import { useAxiosContext } from "../../contexts/AxiosContext";
 
 //interface MyEventInput extends EventInput {
 //  title: string;
@@ -23,6 +24,7 @@ interface Props {
 const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
   const dispatch = useContext(EventsDispatchContext);
   const [event, setEvent] = useState(initialEvent);
+  const { customAxios } = useAxiosContext();
 
   function toDateTime(dateISOStr: DateInput | undefined) {
     if (!dateISOStr) return "";
@@ -37,6 +39,7 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    console.log(event);
     if (e.currentTarget.name === "allDay") {
       setEvent({ ...event, allDay: e.currentTarget.checked });
     } else if (
@@ -62,20 +65,20 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
 
     if (isNewEvent) {
       try {
-        const result = await axios.post("api/events", event);
+        const res = await customAxios.post("api/events", event);
         dispatch({
           type: "added",
-          payload: result.data,
+          payload: res.data,
         });
       } catch (err) {
         console.error(err);
       }
     } else {
       try {
-        const result = await axios.put("api/events", event);
+        const res = await customAxios.put(`api/events/${event.id}`, event);
         dispatch({
           type: "updated",
-          payload: result.data,
+          payload: res.data,
         });
       } catch (err) {
         console.error(err);

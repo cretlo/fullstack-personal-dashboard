@@ -21,7 +21,6 @@ export interface AlertData {
 }
 
 export interface AuthState {
-  token: string | null;
   user: { id: number; username: string } | null;
   isAuthenticated: boolean | null;
   isLoading: boolean;
