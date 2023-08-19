@@ -41,6 +41,9 @@ export const notes = pgTable("notes", {
   }),
 });
 
+export type Note = InferModel<typeof notes, "select">;
+export type NewNote = InferModel<typeof notes, "insert">;
+
 export const events = pgTable("events", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 256 }).notNull(),
@@ -52,3 +55,6 @@ export const events = pgTable("events", {
     onDelete: "cascade",
   }),
 });
+
+export type Event = InferModel<typeof events, "select">;
+export type NewEvent = InferModel<typeof events, "insert">;

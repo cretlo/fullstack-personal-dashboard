@@ -3,6 +3,7 @@ import db from "../db/db";
 import { notes } from "../db/schema";
 import { InferModel, eq } from "drizzle-orm";
 import { authorize } from "../middleware/authorize";
+import { validateNoteSchema } from "../middleware/validation";
 
 const router = express.Router();
 
@@ -22,12 +23,8 @@ router.get("/", authorize, async (req, res) => {
   }
 });
 
-router.post("/", authorize, async (req, res) => {
-  const newNote: NewNote = {
-    title: req.body.title,
-    note: req.body.note,
-    editorState: req.body.editorState,
-  };
+router.post("/", authorize, validateNoteSchema, async (req, res) => {
+  const newNote: NewNote = req.validatedNoteData;
 
   try {
     const result = await db.insert(notes).values(newNote).returning();
@@ -38,9 +35,9 @@ router.post("/", authorize, async (req, res) => {
   }
 });
 
-router.put("/:id", authorize, async (req, res) => {
+router.put("/:id", authorize, validateNoteSchema, async (req, res) => {
   const noteId = Number(req.params.id);
-  const newNote: NewNote = { ...req.body };
+  const newNote: NewNote = req.validatedNoteData;
 
   try {
     const result = await db

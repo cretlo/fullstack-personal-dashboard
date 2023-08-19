@@ -24,6 +24,7 @@ const events_1 = __importDefault(require("./routes/events"));
 const notes_1 = __importDefault(require("./routes/notes"));
 //Middleware
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // migrations
@@ -32,6 +33,15 @@ function main() {
         const app = (0, express_1.default)();
         app.use(express_1.default.json());
         app.use((0, cors_1.default)());
+        app.use((0, cookie_parser_1.default)());
+        app.use((_, res, next) => {
+            res.locals.jwtExpiration = 60;
+            res.locals.cookieConfig = {
+                httpOnly: true,
+                sameSite: "strict",
+            };
+            next();
+        });
         app.use("/api/users", users_1.default);
         app.use("/api/auth", auth_1.default);
         app.use("/api/contacts", contacts_1.default);

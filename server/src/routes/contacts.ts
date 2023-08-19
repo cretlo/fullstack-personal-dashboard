@@ -22,6 +22,7 @@ router.get("/", authorize, async (req, res) => {
 
 router.post("/", authorize, validateContactSchema, async (req, res) => {
   const newContact: NewContact = req.validatedContactData;
+
   try {
     const result = await db.insert(contacts).values(newContact).returning();
     return res.status(200).send(result[0]);
@@ -55,7 +56,7 @@ router.put("/:id", authorize, validateContactSchema, async (req, res) => {
 
 router.delete("/:id", authorize, async (req, res) => {
   const contactId = Number(req.params.id);
-  const userId = req.user.id;
+  //const userId = req.user.id;
 
   if (!req.params.id) {
     return res.status(400).send({ message: "Must supply a contact" });
@@ -64,7 +65,7 @@ router.delete("/:id", authorize, async (req, res) => {
   try {
     const result = await db
       .delete(contacts)
-      .where(eq(contacts.id, contactId) && eq(contacts.userId, userId))
+      .where(eq(contacts.id, contactId))
       .returning();
     return res.status(200).send(result[0]);
   } catch (err) {

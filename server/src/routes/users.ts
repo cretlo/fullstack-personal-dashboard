@@ -13,10 +13,10 @@ const router = express.Router();
 
 /* @route     POST api/users
  * @desc      Register a user
- * @access    Public
- * */
+ * @access    Public */
 router.post("/", validateUserSchema, async (req, res) => {
   const { username, email, password } = req.validatedUserData;
+  console.log("res.locals", res.locals);
 
   try {
     const queriedUsers: User[] = await db
@@ -58,11 +58,14 @@ router.post("/", validateUserSchema, async (req, res) => {
       payload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 3600,
+        expiresIn: res.locals.jwtExpiration,
       },
       (err, token) => {
         if (err) throw err;
-        return res.json({ token });
+        res.cookie("token", token, res.locals.cookieConfig);
+        console.log("Registered ", username);
+        return res.json({ message: "Register success" });
+        //return res.json({ token });
       },
     );
   } catch (err) {

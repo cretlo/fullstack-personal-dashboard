@@ -30,10 +30,10 @@ export function validateUserSchema(
 }
 
 const contactSchema = z.object({
-  userId: z.number(),
   email: z.string().optional(),
   name: z.string().optional(),
   phone: z.string().optional(),
+  userId: z.number(),
 });
 
 export function validateContactSchema(
@@ -47,6 +47,65 @@ export function validateContactSchema(
       userId: req.user.id,
     };
     req.validatedContactData = contactSchema.parse(contactData);
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      res.status(400).json({ message: err.issues[0].message });
+    } else {
+      res.status(500).json({ message: "Something happened" });
+    }
+  }
+}
+
+const eventSchema = z.object({
+  title: z.string(),
+  start: z.coerce.date(),
+  end: z.coerce.date().optional(),
+  description: z.string().optional(),
+  allDay: z.boolean(),
+  userId: z.number(),
+});
+
+export function validateEventSchema(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    console.log(req.body, "\n\n");
+    const eventData = {
+      ...req.body,
+      userId: req.user.id,
+    };
+    req.validatedEventData = eventSchema.parse(eventData);
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      res.status(400).json({ message: err.issues[0].message });
+    } else {
+      res.status(500).json({ message: "Something happened" });
+    }
+  }
+}
+
+const noteSchema = z.object({
+  title: z.string().optional(),
+  note: z.string().optional(),
+  editorState: z.string().optional(),
+  userId: z.number(),
+});
+
+export function validateNoteSchema(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const noteData = {
+      ...req.body,
+      userId: req.user.id,
+    };
+    req.validatedNoteData = noteSchema.parse(noteData);
     next();
   } catch (err) {
     if (err instanceof ZodError) {

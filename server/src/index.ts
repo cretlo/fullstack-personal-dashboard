@@ -14,6 +14,7 @@ import events from "./routes/events";
 import notes from "./routes/notes";
 //Middleware
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 async function main() {
   // migrations
@@ -27,6 +28,15 @@ async function main() {
 
   app.use(express.json());
   app.use(cors());
+  app.use(cookieParser());
+  app.use((_, res, next) => {
+    res.locals.jwtExpiration = 60;
+    res.locals.cookieConfig = {
+      httpOnly: true,
+      sameSite: "strict",
+    };
+    next();
+  });
 
   app.use("/api/users", users);
   app.use("/api/auth", auth);

@@ -3,6 +3,7 @@ import db from "../db/db";
 import { events } from "../db/schema";
 import { InferModel, eq } from "drizzle-orm";
 import { authorize } from "../middleware/authorize";
+import { validateEventSchema } from "../middleware/validation";
 
 const router = express.Router();
 
@@ -14,35 +15,28 @@ router.get("/", authorize, async (req, res) => {
     const result: Event[] = await db
       .select()
       .from(events)
-      .where(eq(events.id, req.user.id));
-    res.status(200).send(result);
+      .where(eq(events.userId, req.user.id));
+    return res.status(200).send(result);
   } catch (err) {
-    res.send({ message: "Couldn't get events" });
+    return res.send({ message: "Couldn't get events" });
   }
 });
 
-router.post("/", authorize, async (req, res) => {
-  const newEvent: NewEvent = {
-    title: req.body.title,
-    start: new Date(req.body.start),
-    end: req.body.end ? new Date(req.body.end) : null,
-    description: req.body.description,
-    allDay: req.body.allDay,
-  };
+router.post("/", authorize, validateEventSchema, async (req, res) => {
+  const newEvent: NewEvent = req.validatedEventData;
 
   try {
     const result = await db.insert(events).values(newEvent).returning();
-    res.status(200).send(result[0]);
+    return res.status(200).send(result[0]);
   } catch (err) {
     console.log(err);
-    res.status(400).send({ message: err });
+    return res.status(400).send({ message: err });
   }
 });
 
-router.put("/:id", authorize, async (req, res) => {
+router.put("/:id", authorize, validateEventSchema, async (req, res) => {
   const eventId = Number(req.params.id);
-
-  const updatedEvent: NewEvent = { ...req.body };
+  const updatedEvent: NewEvent = req.validatedEventData;
 
   try {
     const result = await db
@@ -50,23 +44,24 @@ router.put("/:id", authorize, async (req, res) => {
       .set(updatedEvent)
       .where(eq(events.id, eventId))
       .returning();
-    res.status(200).send(result[0]);
+    return res.status(200).send(result[0]);
   } catch (err) {
-    res.status(400).send({ message: err });
+    return res.status(400).send({ message: err });
   }
 });
 
-router.delete("/:id", authorize, async (req, res) => {
+router.delete("/:id", authorize, validateEventSchema, async (req, res) => {
   const eventId = Number(req.params.id);
+  const userId = req.user.id;
 
   try {
     const result = await db
       .delete(events)
-      .where(eq(events.id, eventId))
+      .where(eq(events.id, eventId) && eq(events.userId, userId))
       .returning();
-    res.status(200).send(result);
+    return res.status(200).send(result);
   } catch (err) {
-    res.status(400).send({ message: err });
+    return res.status(400).send({ message: err });
   }
 });
 

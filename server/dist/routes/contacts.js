@@ -63,14 +63,14 @@ router.put("/:id", authorize_1.authorize, validation_1.validateContactSchema, (r
 }));
 router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const contactId = Number(req.params.id);
-    const userId = req.user.id;
+    //const userId = req.user.id;
     if (!req.params.id) {
         return res.status(400).send({ message: "Must supply a contact" });
     }
     try {
         const result = yield db_1.default
             .delete(schema_1.contacts)
-            .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId) && (0, drizzle_orm_1.eq)(schema_1.contacts.userId, userId))
+            .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId))
             .returning();
         return res.status(200).send(result[0]);
     }

@@ -1,4 +1,5 @@
-import { Contact, NewContact } from "../db/schema";
+import { CookieOptions } from "express";
+import { Contact, NewContact, NewEvent, NewNote } from "../db/schema";
 
 declare global {
   namespace Express {
@@ -12,10 +13,16 @@ declare global {
         username: string;
         password: string;
       };
+      validatedEventData: NewEvent;
       validatedContactData: NewContact;
+      validatedNoteData: NewNote;
       user: {
         id: number;
       };
+    }
+    interface Locals {
+      jwtExpiration: number;
+      cookieConfig: CookieOptions;
     }
   }
 }

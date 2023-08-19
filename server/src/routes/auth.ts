@@ -70,15 +70,22 @@ router.post("/", validateAuthSchema, async (req, res) => {
       payload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 3600,
+        //expiresIn: 3600,
+        expiresIn: res.locals.jwtExpiration,
       },
       (err, token) => {
         if (err) throw err;
-        return res.json({ token });
+        res.cookie("token", token, res.locals.cookieConfig);
+        return res.json({ message: "Login success" });
+        //return res.json({ token });
       },
     );
   } catch (err) {
     console.error(err);
+    res.clearCookie("token", {
+      httpOnly: true,
+      maxAge: res.locals.cookieExpiration,
+    });
     res.status(500).json({ message: "Server error" });
   }
 });

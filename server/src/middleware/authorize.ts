@@ -2,9 +2,11 @@ import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 export function authorize(req: Request, res: Response, next: NextFunction) {
-  const token = req.header("x-auth-token");
+  //const token = req.header("x-auth-token");
+  const token = req.cookies.token;
 
   if (!token) {
+    res.clearCookie("token", res.locals.cookieConfig);
     return res.status(401).json({ message: "No token, authorization denied" });
   }
 
@@ -26,6 +28,7 @@ export function authorize(req: Request, res: Response, next: NextFunction) {
       console.error(err.message);
       res.status(500).json({ message: "Server error" });
     } else {
+      res.clearCookie("token", res.locals.cookieConfig);
       res.status(401).json({ message: "Authorization denied" });
     }
   }
