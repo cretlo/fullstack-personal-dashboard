@@ -1,9 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { drizzle } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import postgres from "postgres";
+import { initMigrations } from "./db/db";
 
 import express from "express";
 // Routes
@@ -17,12 +15,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 async function main() {
-  // migrations
-  const migrationClient = postgres(
-    "postgres://postgres:postgres@localhost:5432/planner",
-    { max: 1 },
-  );
-  //await migrate(drizzle(migrationClient), { migrationsFolder: "drizzle" });
+  // Drizzle migrations
+  await initMigrations();
 
   const app = express();
 
@@ -30,10 +24,9 @@ async function main() {
   app.use(cors());
   app.use(cookieParser());
   app.use((_, res, next) => {
-    res.locals.jwtExpiration = 60;
+    res.locals.jwtExpiration = 3600;
     res.locals.cookieConfig = {
       httpOnly: true,
-      sameSite: "strict",
     };
     next();
   });

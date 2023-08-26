@@ -45,11 +45,11 @@ router.post("/", authorize_1.authorize, validation_1.validateNoteSchema, (req, r
 }));
 router.put("/:id", authorize_1.authorize, validation_1.validateNoteSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const noteId = Number(req.params.id);
-    const newNote = req.validatedNoteData;
+    const updatedNote = req.validatedNoteData;
     try {
         const result = yield db_1.default
             .update(schema_1.notes)
-            .set(newNote)
+            .set(updatedNote)
             .where((0, drizzle_orm_1.eq)(schema_1.notes.id, noteId))
             .returning();
         res.status(200).send(result[0]);

@@ -16,7 +16,6 @@ const router = express.Router();
  * @access    Public */
 router.post("/", validateUserSchema, async (req, res) => {
   const { username, email, password } = req.validatedUserData;
-  console.log("res.locals", res.locals);
 
   try {
     const queriedUsers: User[] = await db

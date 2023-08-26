@@ -72,7 +72,6 @@ export function validateEventSchema(
   next: NextFunction,
 ) {
   try {
-    console.log(req.body, "\n\n");
     const eventData = {
       ...req.body,
       userId: req.user.id,

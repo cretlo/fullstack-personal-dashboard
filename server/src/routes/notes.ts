@@ -37,12 +37,12 @@ router.post("/", authorize, validateNoteSchema, async (req, res) => {
 
 router.put("/:id", authorize, validateNoteSchema, async (req, res) => {
   const noteId = Number(req.params.id);
-  const newNote: NewNote = req.validatedNoteData;
+  const updatedNote: NewNote = req.validatedNoteData;
 
   try {
     const result = await db
       .update(notes)
-      .set(newNote)
+      .set(updatedNote)
       .where(eq(notes.id, noteId))
       .returning();
     res.status(200).send(result[0]);

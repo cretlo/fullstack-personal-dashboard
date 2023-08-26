@@ -70,7 +70,6 @@ router.post("/", validateAuthSchema, async (req, res) => {
       payload,
       process.env.JWT_SECRET,
       {
-        //expiresIn: 3600,
         expiresIn: res.locals.jwtExpiration,
       },
       (err, token) => {
@@ -88,6 +87,15 @@ router.post("/", validateAuthSchema, async (req, res) => {
     });
     res.status(500).json({ message: "Server error" });
   }
+});
+
+// Logout user
+router.delete("/", (_, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    maxAge: res.locals.cookieExpiration,
+  });
+  return res.json({ message: "User logged out" });
 });
 
 export default router;

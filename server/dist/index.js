@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const postgres_1 = __importDefault(require("postgres"));
+const db_1 = require("./db/db");
 const express_1 = __importDefault(require("express"));
 // Routes
 const users_1 = __importDefault(require("./routes/users"));
@@ -27,18 +27,16 @@ const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        // migrations
-        const migrationClient = (0, postgres_1.default)("postgres://postgres:postgres@localhost:5432/planner", { max: 1 });
-        //await migrate(drizzle(migrationClient), { migrationsFolder: "drizzle" });
+        // Drizzle migrations
+        yield (0, db_1.initMigrations)();
         const app = (0, express_1.default)();
         app.use(express_1.default.json());
         app.use((0, cors_1.default)());
         app.use((0, cookie_parser_1.default)());
         app.use((_, res, next) => {
-            res.locals.jwtExpiration = 60;
+            res.locals.jwtExpiration = 3600;
             res.locals.cookieConfig = {
                 httpOnly: true,
-                sameSite: "strict",
             };
             next();
         });
