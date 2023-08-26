@@ -14,26 +14,13 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
   const { customAxios } = useAxiosContext();
 
   useEffect(() => {
-    //fetchEvents()
-    //  .then((res) => {
-    //    dispatch({
-    //      type: "fetched",
-    //      payload: res.data,
-    //    });
-    //  })
-    //  .catch((err) => console.log(err));
-    customAxios.get("api/events").then((res) =>
+    customAxios.get("api/events").then((res) => {
       dispatch({
         type: "fetched",
         payload: res.data,
-      }),
-    );
+      });
+    });
   }, []);
-
-  // async function fetchEvents() {
-  //   //return await axios.get("http://localhost:4000/events");
-  //   return await axios.get("/api/events");
-  // }
 
   return (
     <EventsContext.Provider value={events}>

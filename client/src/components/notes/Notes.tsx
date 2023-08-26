@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
 import { Note as NoteType } from "../../types";
 import Note from "./Note";
-//import axios from "axios";
 import { useAxiosContext } from "../../contexts/AxiosContext";
-
-// interface Props {
-//   initialNotes: NoteType[];
-// }
 
 const Notes = () => {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [isNewNote, setIsNewNote] = useState(false);
   const { customAxios } = useAxiosContext();
-  const newNote: NoteType = {
+  const emptyNote: NoteType = {
     id: -1,
     title: "Untitled",
     note: "",
@@ -24,7 +19,6 @@ const Notes = () => {
       .get("api/notes")
       .then((res) => {
         setNotes(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -51,9 +45,7 @@ const Notes = () => {
     try {
       const result = await customAxios.put(`api/notes/${newNote.id}`, newNote);
       setNotes(
-        notes.map((note) =>
-          note.id === result.data.id ? result.data.id : note,
-        ),
+        notes.map((note) => (note.id === result.data.id ? result.data : note)),
       );
     } catch (err) {
       console.error(err);
@@ -63,17 +55,17 @@ const Notes = () => {
   return (
     <>
       <h2 className="mb-3">Notes</h2>
-      <div
-        className="position-relative overflow-scroll bg-warning"
-        style={{ maxHeight: "80vh" }}
-      >
-        <div className="list-group">
-          <button
-            className="list-group-item active sticky-top"
-            onClick={() => setIsNewNote(true)}
-          >
-            Create Note
-          </button>
+      <div className="list-group">
+        <button
+          className="list-group-item active sticky-top"
+          onClick={() => setIsNewNote(true)}
+        >
+          Create Note
+        </button>
+        <div
+          className="position-relative overflow-scroll bg-warning"
+          style={{ maxHeight: "80vh" }}
+        >
           <div>
             {notes.map((note) => {
               return (
@@ -89,7 +81,7 @@ const Notes = () => {
             })}
             {isNewNote && (
               <Note
-                initialNote={newNote}
+                initialNote={emptyNote}
                 isNewNote={isNewNote}
                 updateNote={addNote}
                 addNote={addNote}

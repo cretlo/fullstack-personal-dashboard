@@ -3,15 +3,7 @@ import { EventsDispatchContext } from "../../contexts/EventsContext";
 import { EventInput, DateInput } from "@fullcalendar/core/index.js";
 import { Modal } from "react-bootstrap";
 import dayjs from "dayjs";
-//import axios from "axios";
 import { useAxiosContext } from "../../contexts/AxiosContext";
-
-//interface MyEventInput extends EventInput {
-//  title: string;
-//  start: string;
-//  description: string;
-//  allDay: boolean;
-//}
 
 interface Props {
   initialEvent: EventInput;
@@ -38,24 +30,90 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
     return dayjs(dateISOStr.toString()).format("YYYY-MM-DD");
   }
 
+  function isValidDateRange(
+    start: string | DateInput | undefined,
+    end: string | DateInput | undefined,
+  ) {
+    if (!start || !end) return true;
+
+    const startDate = dayjs(start?.toString()).toDate();
+    const endDate = dayjs(end?.toString()).toDate();
+
+    return startDate <= endDate;
+  }
+
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    console.log(event);
-    if (e.currentTarget.name === "allDay") {
-      setEvent({ ...event, allDay: e.currentTarget.checked });
-    } else if (
-      e.currentTarget.type === "date" ||
-      e.currentTarget.type === "datetime-local"
-    ) {
-      setEvent({
-        ...event,
-        [e.currentTarget.name]: dayjs(e.currentTarget.value).toISOString(),
-      });
-    } else {
-      setEvent({
-        ...event,
-        [e.currentTarget.name]: e.currentTarget.value,
-      });
+    const inputName = e.currentTarget.name;
+
+    switch (inputName) {
+      case "allDay": {
+        setEvent({ ...event, allDay: e.currentTarget.checked });
+        return;
+      }
+      case "start":
+      case "end": {
+        if (e.currentTarget.value === "") {
+          // Clear button pressed
+          setEvent({
+            ...event,
+            [inputName]: undefined,
+          });
+          return;
+        }
+
+        // Valid date range guard
+        if (!isValidDateRange(event.start, e.currentTarget.value)) {
+          // Throw an error
+          console.log("Invalid date range");
+          return;
+        }
+
+        setEvent({
+          ...event,
+          [inputName]: dayjs(e.currentTarget.value).toISOString(),
+        });
+        return;
+      }
+      default: {
+        setEvent({
+          ...event,
+          [inputName]: e.currentTarget.value,
+        });
+      }
     }
+
+    //if (e.currentTarget.name === "allDay") {
+    //  setEvent({ ...event, allDay: e.currentTarget.checked });
+    //  return;
+    //}
+
+    //if (
+    //  e.currentTarget.type === "date" ||
+    //  e.currentTarget.type === "datetime-local"
+    //) {
+    //  if (e.currentTarget.value === "") {
+    //    // Clear button pressed
+    //    setEvent({
+    //      ...event,
+    //      [e.currentTarget.name]: undefined,
+    //    });
+    //    return;
+    //  }
+
+    //  if (event.start && e.currentTarget.name === "end") {
+    //  }
+
+    //  setEvent({
+    //    ...event,
+    //    [e.currentTarget.name]: dayjs(e.currentTarget.value).toISOString(),
+    //  });
+    //  return;
+    //}
+
+    //setEvent({
+    //  ...event,
+    //  [e.currentTarget.name]: e.currentTarget.value,
+    //});
   }
 
   async function handleSubmit(e: FormEvent) {

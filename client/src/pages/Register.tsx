@@ -56,57 +56,71 @@ const Register = () => {
 
   return (
     <div className="container">
-      <div className="card p-3">
-        <h2>Register</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Username</label>
-            <input
-              type="text"
-              name="username"
-              className="form-control"
-              onChange={handleChange}
-              value={username}
-            />
-          </div>
-          <div>
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              onChange={handleChange}
-              value={email}
-            />
-          </div>
-          <div>
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              onChange={handleChange}
-              value={password}
-            />
-          </div>
-          <div>
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              className="form-control"
-              onChange={handleChange}
-              value={confirmPassword}
-            />
-          </div>
-          <div className="d-grid">
-            <input
-              type="submit"
-              className="btn btn-primary d-block"
-              value="Submit"
-            />
-          </div>
-        </form>
+      <div className="row">
+        <div className="card p-3 col-md-8 offset-md-3 col-lg-6 offset-lg-3">
+          <h2 className="text-center">Register</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="username">
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                className="form-control"
+                onChange={handleChange}
+                value={username}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                className="form-control"
+                onChange={handleChange}
+                value={email}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="password">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                className="form-control"
+                onChange={handleChange}
+                value={password}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="confirmPassword">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                name="confirmPassword"
+                className="form-control"
+                onChange={handleChange}
+                value={confirmPassword}
+              />
+            </div>
+            <div className="d-grid">
+              <input
+                type="submit"
+                className="btn btn-primary d-block"
+                value="Submit"
+              />
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

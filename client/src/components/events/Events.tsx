@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo } from "react";
 import { EventsContext } from "../../contexts/EventsContext";
 import EventModal from "./EventModal";
-import { EventInput } from "@fullcalendar/core/index.js";
+import { DateInput, EventInput } from "@fullcalendar/core/index.js";
 import dayjs from "dayjs";
 
 const Events = () => {
@@ -17,16 +17,20 @@ const Events = () => {
     allDay: true,
   });
 
+  // Events later than 2 days ago wont be displayed
   const sortedEvents = useMemo(() => {
     return sortEvents(filterEvents(events));
   }, [events]);
 
   function filterEvents(events: EventInput[]) {
     return events.filter((event) => {
-      const aStartDate = dayjs(event.start?.toString());
+      const startDate = dayjs(event.start?.toString());
+      const endDate = dayjs(event.end?.toString() ?? null);
       const today = dayjs();
 
-      return aStartDate.isAfter(today.subtract(2, "day"));
+      if (endDate.isValid()) return endDate.isAfter(today);
+
+      return startDate.isAfter(today);
     });
   }
 
@@ -34,14 +38,9 @@ const Events = () => {
     return events.sort((a, b) => {
       const aStartDate = dayjs(a.start?.toString());
       const bStartDate = dayjs(b.start?.toString());
-      const today = dayjs();
 
-      if (aStartDate.isBefore(today.subtract(1, "day"))) {
-        return 1;
-      } else if (aStartDate.isBefore(bStartDate)) {
+      if (aStartDate.isBefore(bStartDate)) {
         return -1;
-      } else if (aStartDate.isSame(bStartDate)) {
-        return 0;
       } else {
         return 1;
       }
@@ -56,7 +55,7 @@ const Events = () => {
 
   function handleAddButtonClick() {
     const newEvent: EventInput = {
-      id: "0",
+      id: "-1",
       title: "",
       start: "",
       end: undefined,
@@ -97,6 +96,27 @@ const Events = () => {
     return startDateStr + endDateStr;
   }
 
+  function isPastEvent(
+    start: DateInput | undefined,
+    end: DateInput | undefined,
+  ) {
+    const currDate = new Date();
+    let startDate;
+    let endDate;
+
+    if (start?.toString()) {
+      startDate = new Date(start.toString());
+      if (startDate < currDate) return true;
+    }
+
+    if (end?.toString()) {
+      endDate = new Date(end.toString());
+      if (endDate < currDate) return true;
+    }
+
+    return false;
+  }
+
   return (
     <>
       <h2 className="mb-3">Events</h2>
@@ -116,7 +136,9 @@ const Events = () => {
           return (
             <button
               key={event.id}
-              className="list-group-item list-group-item-action"
+              className={`list-group-item list-group-item-action ${
+                isPastEvent(event.start, event.end) && "bg-danger"
+              }`}
               onClick={() => handleChangeEvent(event)}
             >
               <div className="d-flex justify-content-between">

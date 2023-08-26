@@ -3,16 +3,23 @@ import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
 
 import { useAuthContext } from "../contexts/AuthContext";
+import { useAxiosContext } from "../contexts/AxiosContext";
 
 const AppNavbar = () => {
   const authContext = useAuthContext();
+  const { customAxios } = useAxiosContext();
 
   const { logout } = authContext;
   const { isAuthenticated, user } = authContext.state;
 
-  //useEffect(() => {
-  //  loadUser();
-  //});
+  async function handleLogout() {
+    try {
+      await customAxios.delete("/api/auth");
+    } catch (err) {
+      console.error(err);
+    }
+    logout();
+  }
 
   const authLinks = (
     <>
@@ -22,10 +29,12 @@ const AppNavbar = () => {
       <Nav.Link as={Link} to={"/calendar"} className="text-white">
         Calendar
       </Nav.Link>
-      <div className="vr bg-white" />
-      <Nav.Link onClick={() => logout()} className="text-white">
-        <span>Welcome {user?.username} </span>Logout
-      </Nav.Link>
+      <button
+        onClick={() => handleLogout()}
+        className="ms-lg-3 btn btn-outline-light"
+      >
+        Logout
+      </button>
     </>
   );
 
@@ -43,7 +52,13 @@ const AppNavbar = () => {
   return (
     <Navbar expand="lg" className="mb-5" data-bs-theme="dark" bg="dark">
       <div className="container">
-        <Navbar.Brand className="text-white">Dashboard</Navbar.Brand>
+        <Navbar.Brand
+          as={Link}
+          to={isAuthenticated ? "/" : "/login"}
+          className="text-white"
+        >
+          Planner
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
