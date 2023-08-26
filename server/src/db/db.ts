@@ -2,9 +2,9 @@ import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 
-const connectionURI = `postgres://postgres:postgres@${
-  process.env.API_HOST || "localhost"
-}:5432/planner`;
+const connectionURI =
+  process.env.CONNECTION_URI_STRING ||
+  "postgres://postgres:postgres@localhost:5432/planner";
 
 export async function initMigrations() {
   // Retry logic needed for docker compose

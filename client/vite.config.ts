@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -7,10 +8,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: `http://${process.env.VITE_PROXY || "localhost"}:4000`,
+        target: process.env.VITE_PROXY_STRING || "http://localhost:4000",
         changeOrigin: true,
         secure: false,
       },
     },
   },
 });
+//import.meta.env.VITE_PROXY_STRING

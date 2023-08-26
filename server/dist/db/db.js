@@ -16,7 +16,8 @@ exports.initMigrations = void 0;
 const postgres_js_1 = require("drizzle-orm/postgres-js");
 const migrator_1 = require("drizzle-orm/postgres-js/migrator");
 const postgres_1 = __importDefault(require("postgres"));
-const connectionURI = `postgres://postgres:postgres@${process.env.API_HOST || "localhost"}:5432/planner`;
+const connectionURI = process.env.CONNECTION_URI_STRING ||
+    "postgres://postgres:postgres@localhost:5432/planner";
 function initMigrations() {
     return __awaiter(this, void 0, void 0, function* () {
         // Retry logic needed for docker compose

@@ -28,7 +28,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [alerts, dispatch] = useReducer(alertReducer, initialState);
 
   function setAlert(message: string, type: string) {
-    const id = crypto.randomUUID();
+    const id = String(Math.floor(Math.random() * 1000));
     dispatch({
       type: "set_alert",
       payload: { message, type, id },
