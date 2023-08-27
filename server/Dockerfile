@@ -5,6 +5,4 @@ COPY package*.json ./
 RUN npm install
 #RUN npm install --production
 COPY . .
-RUN chmod a+x ./docker-cmd.sh
-RUN ls ./
-CMD sh ./docker-cmd.sh
+CMD ["npm", "run", "start"]
