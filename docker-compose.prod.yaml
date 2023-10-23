@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  planner-api:
+    build:
+      context: ./server/
+    restart: always
+    ports: 
+      - 4000:4000
+    env_file:
+      - ./server/.env
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    # Password is only non-option env var
+    environment:
+      # Must add Postgres_DB and POSTGRES_PASSWORD
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
