@@ -10,7 +10,7 @@ const AppNavbar = () => {
   const { customAxios } = useAxiosContext();
 
   const { logout } = authContext;
-  const { isAuthenticated, user } = authContext.state;
+  const { isAuthenticated } = authContext.state;
 
   async function handleLogout() {
     try {
