@@ -1,3 +1,4 @@
 pg-data
 .env
+.env.production
 *passwd*

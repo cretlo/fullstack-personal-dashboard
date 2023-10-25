@@ -14,7 +14,7 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
   const { customAxios } = useAxiosContext();
 
   useEffect(() => {
-    customAxios.get("api/events").then((res) => {
+    customAxios.get(`${import.meta.env.VITE_API_URL}/events`).then((res) => {
       dispatch({
         type: "fetched",
         payload: res.data,

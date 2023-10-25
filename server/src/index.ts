@@ -13,6 +13,7 @@ import notes from "./routes/notes";
 //Middleware
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { w } from "drizzle-orm/column.d-04875079";
 
 async function main() {
   // Drizzle migrations
@@ -20,13 +21,24 @@ async function main() {
 
   const app = express();
 
+  app.use((req, res, next) => {
+    console.log("Request made");
+    next();
+  });
+
   app.use(express.json());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    }),
+  );
   app.use(cookieParser());
   app.use((_, res, next) => {
     res.locals.jwtExpiration = 3600;
     res.locals.cookieConfig = {
       httpOnly: true,
+      sameSite: "none",
     };
     next();
   });

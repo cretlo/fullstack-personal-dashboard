@@ -16,7 +16,7 @@ const Notes = () => {
 
   useEffect(() => {
     customAxios
-      .get("api/notes")
+      .get(`${import.meta.env.VITE_API_URL}/notes`)
       .then((res) => {
         setNotes(res.data);
       })
@@ -25,7 +25,10 @@ const Notes = () => {
 
   async function addNote(newNote: NoteType) {
     try {
-      const result = await customAxios.post("api/notes", newNote);
+      const result = await customAxios.post(
+        `${import.meta.env.VITE_API_URL}/notes`,
+        newNote,
+      );
       setNotes([...notes, result.data]);
     } catch (err) {
       console.error(err);
@@ -34,7 +37,9 @@ const Notes = () => {
 
   async function deleteNote(id: number) {
     try {
-      const result = await customAxios.delete(`api/notes/${id}`);
+      const result = await customAxios.delete(
+        `${import.meta.env.VITE_API_URL}/notes/${id}`,
+      );
       setNotes(notes.filter((note) => note.id !== result.data.id));
     } catch (err) {
       console.error(err);
@@ -43,7 +48,10 @@ const Notes = () => {
 
   async function updateNote(newNote: NoteType) {
     try {
-      const result = await customAxios.put(`api/notes/${newNote.id}`, newNote);
+      const result = await customAxios.put(
+        `${import.meta.env.VITE_API_URL}/notes/${newNote.id}`,
+        newNote,
+      );
       setNotes(
         notes.map((note) => (note.id === result.data.id ? result.data : note)),
       );

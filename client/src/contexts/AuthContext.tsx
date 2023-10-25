@@ -43,7 +43,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Load user
   async function loadUser(initialFetch?: boolean) {
     try {
-      const res = await axios.get("/api/auth", { withCredentials: true });
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth`, {
+        withCredentials: true,
+      });
 
       dispatch({
         type: "user_loaded",
@@ -69,7 +71,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     try {
-      const res = await axios.post("/api/users", formData, config);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users`,
+        formData,
+        config,
+      );
 
       dispatch({
         type: "register_succeeded",
@@ -97,7 +103,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     try {
-      const res = await axios.post("/api/auth", formData, config);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth`,
+        formData,
+        config,
+      );
 
       dispatch({
         type: "login_succeeded",

@@ -14,7 +14,7 @@ const AppNavbar = () => {
 
   async function handleLogout() {
     try {
-      await customAxios.delete("/api/auth");
+      await customAxios.delete(`${import.meta.env.VITE_API_URL}/auth`);
     } catch (err) {
       console.error(err);
     }

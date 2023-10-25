@@ -63,7 +63,9 @@ const FilteredContact = () => {
 
   useEffect(() => {
     async function fetchContacts() {
-      const res = await customAxios.get("api/contacts");
+      const res = await customAxios.get(
+        `${import.meta.env.VITE_API_URL}/contacts`,
+      );
       return res.data;
     }
 
@@ -75,7 +77,7 @@ const FilteredContact = () => {
   async function updateContact(updatedContact: ContactType) {
     try {
       const res = await customAxios.put(
-        `api/contacts/${updatedContact.id}`,
+        `${import.meta.env.VITE_API_URL}/contacts/${updatedContact.id}`,
         updatedContact,
       );
       setContacts(
@@ -90,7 +92,10 @@ const FilteredContact = () => {
 
   async function addContact(newContact: NewContact) {
     try {
-      const res = await customAxios.post("api/contacts", newContact);
+      const res = await customAxios.post(
+        `${import.meta.env.VITE_API_URL}/contacts`,
+        newContact,
+      );
       setContacts([...contacts, res.data]);
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -103,7 +108,9 @@ const FilteredContact = () => {
 
   async function deleteContact(id: number) {
     try {
-      const res = await customAxios.delete(`api/contacts/${id}`);
+      const res = await customAxios.delete(
+        `${import.meta.env.VITE_API_URL}/contacts/${id}`,
+      );
       setContacts(contacts.filter((contact) => contact.id !== res.data.id));
     } catch (err) {
       console.error(err);

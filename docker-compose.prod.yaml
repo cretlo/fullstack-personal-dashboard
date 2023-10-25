@@ -15,7 +15,7 @@ services:
     image: postgres
     restart: always
     # Password is only non-option env var
-    environment:
+    # environment:
       # Must add Postgres_DB and POSTGRES_PASSWORD
     volumes:
       - pg-data:/var/lib/postgresql/data

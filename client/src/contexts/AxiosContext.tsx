@@ -43,5 +43,20 @@ export const AxiosProvider = ({ children }: Props) => {
     },
   );
 
+  // Needed to allow requests with credentials
+  customAxios.interceptors.request.use(
+    (req) => {
+      req.withCredentials = true;
+      return req;
+    },
+    (error) => {
+      if (error instanceof AxiosError) {
+        logout();
+      }
+
+      return Promise.reject(error);
+    },
+  );
+
   return <Provider value={{ customAxios }}>{children}</Provider>;
 };

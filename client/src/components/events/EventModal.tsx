@@ -123,7 +123,10 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
 
     if (isNewEvent) {
       try {
-        const res = await customAxios.post("api/events", event);
+        const res = await customAxios.post(
+          `${import.meta.env.VITE_API_URL}/events`,
+          event,
+        );
         dispatch({
           type: "added",
           payload: res.data,
@@ -133,7 +136,10 @@ const EventModal = ({ initialEvent, isNewEvent, show, onClose }: Props) => {
       }
     } else {
       try {
-        const res = await customAxios.put(`api/events/${event.id}`, event);
+        const res = await customAxios.put(
+          `${import.meta.env.VITE_API_URL}/events/${event.id}`,
+          event,
+        );
         dispatch({
           type: "updated",
           payload: res.data,
