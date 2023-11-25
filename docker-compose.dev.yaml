@@ -2,7 +2,8 @@ version: '3'
 services:
   frontend:
     image: node:18-alpine
-    command: sh -c "npm install && npm run dev"
+    container_name: planner-frontend
+    command: sh -c "npm run dev"
     ports:
       - 127.0.0.1:3000:5173 
     working_dir: /app
@@ -12,7 +13,8 @@ services:
       - api
   api:
     image: node:18-alpine
-    command: sh -c "npm install && npm run start"
+    container_name: planner-api
+    command: sh -c "npm run start"
     ports:
       - 127.0.0.1:4000:4000
     working_dir: /api
