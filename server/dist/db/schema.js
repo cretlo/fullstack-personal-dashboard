@@ -29,7 +29,7 @@ exports.notes = (0, pg_core_1.pgTable)("notes", {
     }),
 });
 exports.events = (0, pg_core_1.pgTable)("events", {
-    id: (0, pg_core_1.serial)("id").primaryKey(),
+    id: (0, pg_core_1.uuid)("id").defaultRandom().primaryKey(),
     title: (0, pg_core_1.varchar)("title", { length: 256 }).notNull(),
     start: (0, pg_core_1.timestamp)("start", { withTimezone: true }).notNull(),
     end: (0, pg_core_1.timestamp)("end", { withTimezone: true }),

@@ -11,58 +11,62 @@ type Event = InferModel<typeof events, "select">;
 type NewEvent = InferModel<typeof events, "insert">;
 
 router.get("/", authorize, async (req, res) => {
-  try {
-    const result: Event[] = await db
-      .select()
-      .from(events)
-      .where(eq(events.userId, req.user.id));
-    return res.status(200).send(result);
-  } catch (err) {
-    return res.send({ message: "Couldn't get events" });
-  }
+    const userId = Number(req.session.userId);
+
+    try {
+        const result: Event[] = await db
+            .select()
+            .from(events)
+            .where(eq(events.userId, userId));
+        return res.status(200).send(result);
+    } catch (err) {
+        return res.send({ message: "Couldn't get events" });
+    }
 });
 
 router.post("/", authorize, validateEventSchema, async (req, res) => {
-  const newEvent: NewEvent = req.validatedEventData;
+    const newEvent: NewEvent = req.validatedEventData;
 
-  try {
-    const result = await db.insert(events).values(newEvent).returning();
-    return res.status(200).send(result[0]);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send({ message: err });
-  }
+    try {
+        const [result] = await db.insert(events).values(newEvent).returning();
+        return res.status(200).send(result);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send({ message: err });
+    }
 });
 
 router.put("/:id", authorize, validateEventSchema, async (req, res) => {
-  const eventId = Number(req.params.id);
-  const updatedEvent: NewEvent = req.validatedEventData;
+    const eventId = req.params.id;
+    const updatedEvent: NewEvent = req.validatedEventData;
 
-  try {
-    const result = await db
-      .update(events)
-      .set(updatedEvent)
-      .where(eq(events.id, eventId))
-      .returning();
-    return res.status(200).send(result[0]);
-  } catch (err) {
-    return res.status(400).send({ message: err });
-  }
+    try {
+        const [result] = await db
+            .update(events)
+            .set(updatedEvent)
+            .where(eq(events.id, eventId))
+            .returning();
+        return res.status(200).send(result);
+    } catch (err) {
+        return res.status(400).send({ message: err });
+    }
 });
 
-router.delete("/:id", authorize, validateEventSchema, async (req, res) => {
-  const eventId = Number(req.params.id);
-  const userId = req.user.id;
+router.delete("/:id", authorize, async (req, res) => {
+    const eventId = req.params.id;
+    const userId = Number(req.session.userId);
 
-  try {
-    const result = await db
-      .delete(events)
-      .where(eq(events.id, eventId) && eq(events.userId, userId))
-      .returning();
-    return res.status(200).send(result);
-  } catch (err) {
-    return res.status(400).send({ message: err });
-  }
+    try {
+        await db
+            .delete(events)
+            .where(eq(events.id, eventId) && eq(events.userId, userId))
+            .returning();
+
+        return res.status(200).json({ message: "Event successfully deleted" });
+    } catch (err) {
+        console.error(`Error: attempting to delete event ${eventId}`);
+        return res.status(400).send({ message: err });
+    }
 });
 
 export default router;

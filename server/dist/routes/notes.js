@@ -24,7 +24,7 @@ router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, v
         const result = yield db_1.default
             .select()
             .from(schema_1.notes)
-            .where((0, drizzle_orm_1.eq)(schema_1.notes.userId, req.user.id));
+            .where((0, drizzle_orm_1.eq)(schema_1.notes.userId, Number(req.session.userId)));
         res.status(200).send(result);
     }
     catch (err) {

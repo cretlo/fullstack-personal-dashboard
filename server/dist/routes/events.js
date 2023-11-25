@@ -20,11 +20,12 @@ const authorize_1 = require("../middleware/authorize");
 const validation_1 = require("../middleware/validation");
 const router = express_1.default.Router();
 router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = Number(req.session.userId);
     try {
         const result = yield db_1.default
             .select()
             .from(schema_1.events)
-            .where((0, drizzle_orm_1.eq)(schema_1.events.userId, req.user.id));
+            .where((0, drizzle_orm_1.eq)(schema_1.events.userId, userId));
         return res.status(200).send(result);
     }
     catch (err) {
@@ -34,8 +35,8 @@ router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, v
 router.post("/", authorize_1.authorize, validation_1.validateEventSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newEvent = req.validatedEventData;
     try {
-        const result = yield db_1.default.insert(schema_1.events).values(newEvent).returning();
-        return res.status(200).send(result[0]);
+        const [result] = yield db_1.default.insert(schema_1.events).values(newEvent).returning();
+        return res.status(200).send(result);
     }
     catch (err) {
         console.log(err);
@@ -43,31 +44,32 @@ router.post("/", authorize_1.authorize, validation_1.validateEventSchema, (req, 
     }
 }));
 router.put("/:id", authorize_1.authorize, validation_1.validateEventSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const eventId = Number(req.params.id);
+    const eventId = req.params.id;
     const updatedEvent = req.validatedEventData;
     try {
-        const result = yield db_1.default
+        const [result] = yield db_1.default
             .update(schema_1.events)
             .set(updatedEvent)
             .where((0, drizzle_orm_1.eq)(schema_1.events.id, eventId))
             .returning();
-        return res.status(200).send(result[0]);
+        return res.status(200).send(result);
     }
     catch (err) {
         return res.status(400).send({ message: err });
     }
 }));
-router.delete("/:id", authorize_1.authorize, validation_1.validateEventSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const eventId = Number(req.params.id);
-    const userId = req.user.id;
+router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const eventId = req.params.id;
+    const userId = Number(req.session.userId);
     try {
-        const result = yield db_1.default
+        yield db_1.default
             .delete(schema_1.events)
             .where((0, drizzle_orm_1.eq)(schema_1.events.id, eventId) && (0, drizzle_orm_1.eq)(schema_1.events.userId, userId))
             .returning();
-        return res.status(200).send(result);
+        return res.status(200).json({ message: "Event successfully deleted" });
     }
     catch (err) {
+        console.error(`Error: attempting to delete event ${eventId}`);
         return res.status(400).send({ message: err });
     }
 }));

@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const db_1 = require("./db/db");
 const express_1 = __importDefault(require("express"));
 // Routes
 const users_1 = __importDefault(require("./routes/users"));
@@ -24,30 +23,24 @@ const events_1 = __importDefault(require("./routes/events"));
 const notes_1 = __importDefault(require("./routes/notes"));
 //Middleware
 const cors_1 = __importDefault(require("cors"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
+// import cookieParser from "cookie-parser";
+const express_session_1 = __importDefault(require("express-session"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        // Drizzle migrations
-        yield (0, db_1.initMigrations)();
         const app = (0, express_1.default)();
-        app.use((req, res, next) => {
-            console.log("Request made");
-            next();
-        });
+        app.use((0, express_session_1.default)({
+            secret: "test",
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                maxAge: 600000,
+            },
+        }));
         app.use(express_1.default.json());
         app.use((0, cors_1.default)({
             origin: "http://localhost:3000",
             credentials: true,
         }));
-        app.use((0, cookie_parser_1.default)());
-        app.use((_, res, next) => {
-            res.locals.jwtExpiration = 3600;
-            res.locals.cookieConfig = {
-                httpOnly: true,
-                sameSite: "none",
-            };
-            next();
-        });
         app.use("/api/users", users_1.default);
         app.use("/api/auth", auth_1.default);
         app.use("/api/contacts", contacts_1.default);

@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../db/db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
+//import { Contact, NewContact } from "../db/schema";
 const authorize_1 = require("../middleware/authorize");
 const validation_1 = require("../middleware/validation");
 const router = express_1.default.Router();
@@ -24,7 +25,7 @@ router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, v
         const result = yield db_1.default
             .select()
             .from(schema_1.contacts)
-            .where((0, drizzle_orm_1.eq)(schema_1.contacts.userId, req.user.id));
+            .where((0, drizzle_orm_1.eq)(schema_1.contacts.userId, Number(req.session.userId)));
         return res.status(200).json(result);
     }
     catch (_a) {
@@ -63,8 +64,7 @@ router.put("/:id", authorize_1.authorize, validation_1.validateContactSchema, (r
 }));
 router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const contactId = Number(req.params.id);
-    //const userId = req.user.id;
-    if (!req.params.id) {
+    if (!contactId) {
         return res.status(400).send({ message: "Must supply a contact" });
     }
     try {
