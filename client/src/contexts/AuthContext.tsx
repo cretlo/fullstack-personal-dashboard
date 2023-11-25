@@ -4,153 +4,156 @@ import { AuthState, LoginUser, RegisterUser } from "../types";
 import axios, { AxiosError } from "axios";
 
 interface AuthContextType {
-  state: AuthState;
-  register: (formData: RegisterUser) => void;
-  clearErrors: () => void;
-  login: (formData: LoginUser) => void;
-  logout: () => void;
-  loadUser: () => void;
+    state: AuthState;
+    register: (formData: RegisterUser) => void;
+    clearErrors: () => void;
+    login: (formData: LoginUser) => void;
+    logout: () => void;
+    loadUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuthContext = () => {
-  const authContext = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
 
-  if (!authContext) {
-    throw new Error(
-      "useAuthContext has to be used within <AuthContext.Provider>",
-    );
-  }
+    if (!authContext) {
+        throw new Error(
+            "useAuthContext has to be used within <AuthContext.Provider>",
+        );
+    }
 
-  return authContext;
+    return authContext;
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const initialState: AuthState = {
-    user: null,
-    isAuthenticated: null,
-    isLoading: true,
-    error: null,
-  };
-  const [state, dispatch] = useReducer(authReducer, initialState);
-
-  useEffect(() => {
-    const initialFetch = true;
-    loadUser(initialFetch);
-  }, []);
-
-  // Load user
-  async function loadUser(initialFetch?: boolean) {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth`, {
-        withCredentials: true,
-      });
-
-      dispatch({
-        type: "user_loaded",
-        payload: res.data,
-      });
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        dispatch({
-          type: "auth_error",
-          payload: initialFetch ? null : err.response?.data.message,
-        });
-      }
-    }
-  }
-
-  // Register user
-  async function register(formData: RegisterUser) {
-    const config = {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const initialState: AuthState = {
+        user: null,
+        isAuthenticated: null,
+        isLoading: true,
+        error: null,
     };
+    const [state, dispatch] = useReducer(authReducer, initialState);
 
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/users`,
-        formData,
-        config,
-      );
+    useEffect(() => {
+        const initialFetch = true;
+        loadUser(initialFetch);
+    }, []);
 
-      dispatch({
-        type: "register_succeeded",
-        payload: res.data,
-      });
+    // Load user
+    async function loadUser(initialFetch?: boolean) {
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/auth`,
+                {
+                    withCredentials: true,
+                },
+            );
 
-      loadUser();
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        dispatch({
-          type: "register_failed",
-          payload: err.response?.data.message,
-        });
-      }
+            dispatch({
+                type: "user_loaded",
+                payload: res.data,
+            });
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                dispatch({
+                    type: "auth_error",
+                    payload: initialFetch ? null : err.response?.data.message,
+                });
+            }
+        }
     }
-  }
 
-  // Login user
-  async function login(formData: LoginUser) {
-    const config = {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    // Register user
+    async function register(formData: RegisterUser) {
+        const config = {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
 
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth`,
-        formData,
-        config,
-      );
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/users`,
+                formData,
+                config,
+            );
 
-      dispatch({
-        type: "login_succeeded",
-        payload: res.data,
-      });
+            dispatch({
+                type: "register_succeeded",
+                payload: res.data,
+            });
 
-      loadUser();
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        dispatch({
-          type: "login_failed",
-          payload: err.response?.data.message,
-        });
-      }
+            loadUser();
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                dispatch({
+                    type: "register_failed",
+                    payload: err.response?.data.message,
+                });
+            }
+        }
     }
-  }
 
-  // Logout user
-  function logout() {
-    dispatch({
-      type: "logout",
-    });
-  }
+    // Login user
+    async function login(formData: LoginUser) {
+        const config = {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
 
-  // Clear errors
-  function clearErrors() {
-    dispatch({
-      type: "clear_erros",
-    });
-  }
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/auth`,
+                formData,
+                config,
+            );
 
-  return (
-    <AuthContext.Provider
-      value={{
-        state,
-        register,
-        clearErrors,
-        login,
-        loadUser,
-        logout,
-      }}
-    >
-      {!state.isLoading && children}
-    </AuthContext.Provider>
-  );
+            dispatch({
+                type: "login_succeeded",
+                payload: res.data,
+            });
+
+            loadUser();
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                dispatch({
+                    type: "login_failed",
+                    payload: err.response?.data.message,
+                });
+            }
+        }
+    }
+
+    // Logout user
+    function logout() {
+        dispatch({
+            type: "logout",
+        });
+    }
+
+    // Clear errors
+    function clearErrors() {
+        dispatch({
+            type: "clear_erros",
+        });
+    }
+
+    return (
+        <AuthContext.Provider
+            value={{
+                state,
+                register,
+                clearErrors,
+                login,
+                loadUser,
+                logout,
+            }}
+        >
+            {!state.isLoading && children}
+        </AuthContext.Provider>
+    );
 }

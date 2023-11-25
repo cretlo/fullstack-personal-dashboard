@@ -1,44 +1,46 @@
 {
-  "name": "personal-dashboard",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
-  "proxy": "http://localhost:4000/",
-  "dependencies": {
-    "@fullcalendar/bootstrap5": "^6.1.8",
-    "@fullcalendar/core": "^6.1.8",
-    "@fullcalendar/daygrid": "^6.1.8",
-    "@fullcalendar/interaction": "^6.1.8",
-    "@fullcalendar/react": "^6.1.8",
-    "axios": "^1.4.0",
-    "bootstrap": "^5.3.1",
-    "bootstrap-icons": "^1.10.5",
-    "dayjs": "^1.11.9",
-    "draft-js": "^0.11.7",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.8.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.10.1",
-    "react-router-dom": "^6.14.2"
-  },
-  "devDependencies": {
-    "@types/draft-js": "^0.11.12",
-    "@types/node": "^20.5.6",
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.0.3",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
-  }
+    "name": "personal-dashboard",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --host",
+        "build": "tsc && vite build",
+        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "test": "vitest",
+        "preview": "vite preview"
+    },
+    "proxy": "http://localhost:4000/",
+    "dependencies": {
+        "@fullcalendar/bootstrap5": "^6.1.8",
+        "@fullcalendar/core": "^6.1.8",
+        "@fullcalendar/daygrid": "^6.1.8",
+        "@fullcalendar/interaction": "^6.1.8",
+        "@fullcalendar/react": "^6.1.8",
+        "axios": "^1.4.0",
+        "bootstrap": "^5.3.1",
+        "bootstrap-icons": "^1.10.5",
+        "dayjs": "^1.11.9",
+        "draft-js": "^0.11.7",
+        "react": "^18.2.0",
+        "react-bootstrap": "^2.8.0",
+        "react-dom": "^18.2.0",
+        "react-icons": "^4.10.1",
+        "react-router-dom": "^6.14.2"
+    },
+    "devDependencies": {
+        "@types/draft-js": "^0.11.12",
+        "@types/node": "^20.5.6",
+        "@types/react": "^18.2.15",
+        "@types/react-dom": "^18.2.7",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "@vitejs/plugin-react": "^4.0.3",
+        "eslint": "^8.45.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.4.3",
+        "prettier": "^3.1.0",
+        "typescript": "^5.0.2",
+        "vite": "^4.4.5"
+    }
 }
