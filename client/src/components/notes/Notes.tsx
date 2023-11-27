@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { Note as NoteType } from "../../types";
+import type { Note as NoteType } from "../../types";
 import Note from "./Note";
 import { useAxiosContext } from "../../contexts/AxiosContext";
+import { AxiosError } from "axios";
+import { useAlertContext } from "../../contexts/AlertContext";
 
 const Notes = () => {
     const [notes, setNotes] = useState<NoteType[]>([]);
     const [isNewNote, setIsNewNote] = useState(false);
     const { customAxios } = useAxiosContext();
+    const { setAlert } = useAlertContext();
     const emptyNote: NoteType = {
         id: -1,
         title: "Untitled",
@@ -18,9 +21,19 @@ const Notes = () => {
         customAxios
             .get(`${import.meta.env.VITE_API_URL}/notes`)
             .then((res) => {
+                if (!res) {
+                    throw new AxiosError("Error fetching all notes");
+                }
+
                 setNotes(res.data);
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+                if (err instanceof AxiosError) {
+                    if (err.response?.status === 401) {
+                        console.error(err.response?.data.message);
+                    }
+                }
+            });
     }, []);
 
     async function addNote(newNote: NoteType) {
@@ -31,7 +44,9 @@ const Notes = () => {
             );
             setNotes([...notes, result.data]);
         } catch (err) {
-            console.error(err);
+            if (err instanceof AxiosError) {
+                setAlert(err.response?.data.message, "danger");
+            }
         }
     }
 
@@ -42,7 +57,9 @@ const Notes = () => {
             );
             setNotes(notes.filter((note) => note.id !== result.data.id));
         } catch (err) {
-            console.error(err);
+            if (err instanceof AxiosError) {
+                setAlert(err.response?.data.message, "danger");
+            }
         }
     }
 
@@ -58,7 +75,9 @@ const Notes = () => {
                 ),
             );
         } catch (err) {
-            console.error(err);
+            if (err instanceof AxiosError) {
+                setAlert(err.response?.data.message, "danger");
+            }
         }
     }
 

@@ -1,13 +1,16 @@
-import { useContext, useState } from "react";
-import { EventsContext } from "../../contexts/EventsContext";
+import { useEffect, useState } from "react";
+import { useEventsContext } from "../../contexts/EventsContext";
 import EventModal from "./EventModal";
 import type { EventInput } from "@fullcalendar/core/index.js";
 // Utils
-import sortRecentEvents from "../../utils/sortRecentEvents";
+//import sortRecentEvents from "../../utils/sortRecentEvents";
 import { getFullDateStr } from "../../utils/dateFormat";
+import { useAlertContext } from "../../contexts/AlertContext";
 
 const Events = () => {
-    const { events } = useContext(EventsContext);
+    const { state, clearError } = useEventsContext();
+    const { setAlert } = useAlertContext();
+    const { events, error } = state;
     const [isNewEvent, setIsNewEvent] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [currEvent, setCurrEvent] = useState<EventInput>({
@@ -20,7 +23,15 @@ const Events = () => {
     });
 
     // Events later than 2 days shouldn't be displayed
-    const sortedEvents = sortRecentEvents(events);
+    //const sortedEvents = sortRecentEvents(events);
+    const sortedEvents = events;
+
+    useEffect(() => {
+        if (error) {
+            setAlert(error, "danger");
+            clearError();
+        }
+    }, [error]);
 
     function handleChangeEvent(event: EventInput) {
         setCurrEvent(event);

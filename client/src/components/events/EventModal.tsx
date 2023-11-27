@@ -1,8 +1,10 @@
-import { EventsContext } from "../../contexts/EventsContext";
-import { type ChangeEvent, useContext, FormEvent } from "react";
+import { FormEvent } from "react";
+import type { ChangeEvent } from "react";
 import type { EventInput } from "@fullcalendar/core/index.js";
 import { Modal } from "react-bootstrap";
 import dayjs from "dayjs";
+
+import { useEventsContext } from "../../contexts/EventsContext";
 
 // Utils
 import { toDate, toDateTime } from "../../utils/dateFormat";
@@ -17,7 +19,8 @@ interface Props {
 }
 
 const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
-    const { addEvent, updateEvent, deleteEvent } = useContext(EventsContext);
+    // const { addEvent, updateEvent, deleteEvent } = useContext(EventsContext);
+    const { addEvent, updateEvent, deleteEvent } = useEventsContext();
 
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         const inputName = e.currentTarget.name;
@@ -61,35 +64,25 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
     async function handleDelete() {
         if (isNewEvent) return;
 
-        try {
-            await deleteEvent(event);
-        } catch (err) {
-            console.error("Error in hanldeDelete within EventModal", err);
-        }
+        deleteEvent(event);
     }
 
-    async function handleSubmit(e: FormEvent) {
+    function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
         if (isNewEvent) {
-            try {
-                await addEvent(event);
-            } catch (err) {
-                console.error(err);
-            }
+            addEvent(event);
         } else {
-            try {
-                updateEvent(event);
-            } catch (err) {
-                console.error(err);
-            }
+            updateEvent(event);
         }
         onClose();
     }
 
     return (
         <Modal show={show} onHide={onClose}>
-            <Modal.Header>Create Event</Modal.Header>
+            <Modal.Header>
+                {isNewEvent ? "Create Event" : "Edit Event"}
+            </Modal.Header>
             <form onSubmit={handleSubmit}>
                 <Modal.Body>
                     <div className="mb-3">

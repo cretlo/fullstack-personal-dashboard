@@ -1,7 +1,8 @@
 import { createContext, useContext } from "react";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError } from "axios";
+import type { AxiosInstance } from "axios";
 import { useAuthContext } from "./AuthContext";
-import { AxiosError } from "axios";
+import { useAlertContext } from "./AlertContext";
 
 interface Props {
     children: React.ReactNode;
@@ -16,6 +17,7 @@ const { Provider } = AxiosContext;
 
 export const AxiosProvider = ({ children }: Props) => {
     const { logout } = useAuthContext();
+    const { setAlert } = useAlertContext();
 
     const customAxios = axios.create();
 
@@ -26,7 +28,8 @@ export const AxiosProvider = ({ children }: Props) => {
                 // User session expired
                 if (error.response?.status === 401) {
                     logout();
-                    return;
+                    setAlert("Session Expired", "danger");
+                    return Promise.resolve();
                 }
             }
 
@@ -41,10 +44,6 @@ export const AxiosProvider = ({ children }: Props) => {
             return req;
         },
         (error) => {
-            //if (error instanceof AxiosError) {
-            //    logout();
-            //}
-
             return Promise.reject(error);
         },
     );

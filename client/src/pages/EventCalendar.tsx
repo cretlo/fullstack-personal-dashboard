@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EventsContext } from "../contexts/EventsContext";
+import { useEventsContext } from "../contexts/EventsContext";
 // Full calendar
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -13,10 +14,13 @@ import type {
 } from "@fullcalendar/core/index.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import EventModal from "../components/events/EventModal";
+import { useAlertContext } from "../contexts/AlertContext";
 import dayjs from "dayjs";
 
 const EventCalendar = () => {
-    const { events } = useContext(EventsContext);
+    const { state, clearError } = useEventsContext();
+    const { events, error } = state;
+    const { setAlert } = useAlertContext();
     const [isNewEvent, setIsNewEvent] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [currEvent, setCurrEvent] = useState<EventInput>({
@@ -27,6 +31,13 @@ const EventCalendar = () => {
         description: "",
         allDay: true,
     });
+
+    useEffect(() => {
+        if (error) {
+            setAlert(error, "danger");
+            clearError();
+        }
+    }, [error]);
 
     function handleShowModal() {
         setShowModal(true);

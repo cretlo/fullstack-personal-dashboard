@@ -20,28 +20,34 @@ import PrivateRoute from "./components/PrivateRoute";
  * */
 
 function App() {
-  return (
-    <>
-      <AuthProvider>
-        <AxiosProvider>
-          <AlertProvider>
-            <BrowserRouter>
-              <AppNavbar />
-              <Routes>
-                <Route path="/" element={<PrivateRoute />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="calendar" element={<EventCalendar />} />
-                </Route>
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-              </Routes>
-            </BrowserRouter>
-            <Alerts />
-          </AlertProvider>
-        </AxiosProvider>
-      </AuthProvider>
-    </>
-  );
+    return (
+        <>
+            <AuthProvider>
+                <AlertProvider>
+                    <AxiosProvider>
+                        <BrowserRouter>
+                            <AppNavbar />
+                            <Routes>
+                                <Route path="/" element={<PrivateRoute />}>
+                                    <Route path="/" element={<Home />} />
+                                    <Route
+                                        path="calendar"
+                                        element={<EventCalendar />}
+                                    />
+                                </Route>
+                                <Route
+                                    path="/register"
+                                    element={<Register />}
+                                />
+                                <Route path="/login" element={<Login />} />
+                            </Routes>
+                        </BrowserRouter>
+                        <Alerts />
+                    </AxiosProvider>
+                </AlertProvider>
+            </AuthProvider>
+        </>
+    );
 }
 
 export default App;

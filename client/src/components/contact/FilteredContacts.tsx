@@ -14,6 +14,7 @@ import { useAxiosContext } from "../../contexts/AxiosContext";
 //  }
 
 const FilteredContact = () => {
+    const { customAxios } = useAxiosContext();
     const [activeFilter, setActiveFilter] = useState("name");
     const [filterText, setFilterText] = useState("");
     const [contacts, setContacts] = useState<ContactType[]>([]);
@@ -25,7 +26,6 @@ const FilteredContact = () => {
     });
     const [isNewContact, setIsNewContact] = useState(false);
     const [show, setShow] = useState(false);
-    const { customAxios } = useAxiosContext();
 
     const filteredContacts = contacts.map((contact) => {
         const contactComponent = (
