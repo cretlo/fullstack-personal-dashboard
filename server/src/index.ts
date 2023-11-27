@@ -23,7 +23,7 @@ async function main() {
             resave: false,
             saveUninitialized: false,
             cookie: {
-                maxAge: 600000,
+                maxAge: 10000,
             },
         }),
     );

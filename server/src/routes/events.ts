@@ -1,9 +1,12 @@
 import express from "express";
 import db from "../db/db";
 import { events } from "../db/schema";
-import { InferModel, eq } from "drizzle-orm";
+import { InferModel, eq, and } from "drizzle-orm";
 import { authorize } from "../middleware/authorize";
-import { validateEventSchema } from "../middleware/validation";
+import {
+    validateDeleteEvent,
+    validateEventSchema,
+} from "../middleware/validation";
 
 const router = express.Router();
 
@@ -52,20 +55,19 @@ router.put("/:id", authorize, validateEventSchema, async (req, res) => {
     }
 });
 
-router.delete("/:id", authorize, async (req, res) => {
+router.delete("/:id", authorize, validateDeleteEvent, async (req, res) => {
     const eventId = req.params.id;
     const userId = Number(req.session.userId);
 
     try {
         await db
             .delete(events)
-            .where(eq(events.id, eventId) && eq(events.userId, userId))
+            .where(and(eq(events.id, eventId), eq(events.userId, userId)))
             .returning();
 
         return res.status(200).json({ message: "Event successfully deleted" });
     } catch (err) {
-        console.error(`Error: attempting to delete event ${eventId}`);
-        return res.status(400).send({ message: err });
+        return res.status(400).send({ error: "Server error deleting event" });
     }
 });
 

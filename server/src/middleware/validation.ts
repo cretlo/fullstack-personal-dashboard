@@ -60,6 +60,7 @@ export function validateContactSchema(
 // TODO: Ensure end gets coerced to null instead of undefined
 
 const eventSchema = z.object({
+    id: z.string().optional(),
     title: z.string(),
     start: z.coerce.date(),
     //end: z.coerce.date().optional(),
@@ -69,7 +70,6 @@ const eventSchema = z.object({
         .transform((data) => (!data ? null : new Date(data))),
     description: z.string().optional(),
     allDay: z.boolean(),
-    userId: z.number(),
 });
 
 export function validateEventSchema(
@@ -80,8 +80,9 @@ export function validateEventSchema(
     try {
         const eventData = {
             ...req.body,
-            userId: req.session.userId,
+            id: req.params?.id,
         };
+
         req.validatedEventData = eventSchema.parse(eventData);
         next();
     } catch (err) {
@@ -91,6 +92,29 @@ export function validateEventSchema(
         } else {
             console.error("validateEventSchema server error");
             res.status(500).json({ message: "Something happened" });
+        }
+    }
+}
+
+const deleteEventSchema = z.string();
+
+export function validateDeleteEvent(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        req.params.id = deleteEventSchema.parse(req.params.id);
+        console.log(req.params.id);
+        console.log(typeof req.params.id);
+        next();
+    } catch (err) {
+        if (err instanceof ZodError) {
+            console.error("deleteEventSchema zod error");
+            res.status(400).json({ error: err.flatten() });
+        } else {
+            console.error("deleteEventSchema server error");
+            res.status(500).json({ error: "Something happened" });
         }
     }
 }

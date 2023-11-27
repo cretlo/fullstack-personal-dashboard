@@ -16,7 +16,6 @@ const express_1 = __importDefault(require("express"));
 const db_1 = __importDefault(require("../db/db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
-//import { Contact, NewContact } from "../db/schema";
 const authorize_1 = require("../middleware/authorize");
 const validation_1 = require("../middleware/validation");
 const router = express_1.default.Router();
@@ -35,8 +34,11 @@ router.get("/", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, v
 router.post("/", authorize_1.authorize, validation_1.validateContactSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newContact = req.validatedContactData;
     try {
-        const result = yield db_1.default.insert(schema_1.contacts).values(newContact).returning();
-        return res.status(200).send(result[0]);
+        const [result] = yield db_1.default
+            .insert(schema_1.contacts)
+            .values(newContact)
+            .returning();
+        return res.status(200).send(result);
     }
     catch (err) {
         console.error(err);
@@ -47,19 +49,16 @@ router.put("/:id", authorize_1.authorize, validation_1.validateContactSchema, (r
     const contactId = Number(req.params.id);
     const updatedContact = req.validatedContactData;
     try {
-        const result = yield db_1.default
+        const [result] = yield db_1.default
             .update(schema_1.contacts)
             .set(updatedContact)
             .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId))
             .returning();
-        if (!result[0]) {
-            return res.status(400).json({ message: "Couldn't update contact" });
-        }
-        return res.status(200).send(result[0]);
+        return res.status(200).send(result);
     }
     catch (err) {
         console.error(err);
-        return res.status(400).send(err);
+        return res.status(400).json({ message: "Couldn't update contact" });
     }
 }));
 router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -68,11 +67,11 @@ router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, voi
         return res.status(400).send({ message: "Must supply a contact" });
     }
     try {
-        const result = yield db_1.default
+        const [result] = yield db_1.default
             .delete(schema_1.contacts)
             .where((0, drizzle_orm_1.eq)(schema_1.contacts.id, contactId))
             .returning();
-        return res.status(200).send(result[0]);
+        return res.status(200).send(result);
     }
     catch (err) {
         return res.status(400).send(err);

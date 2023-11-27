@@ -58,19 +58,18 @@ router.put("/:id", authorize_1.authorize, validation_1.validateEventSchema, (req
         return res.status(400).send({ message: err });
     }
 }));
-router.delete("/:id", authorize_1.authorize, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/:id", authorize_1.authorize, validation_1.validateDeleteEvent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const eventId = req.params.id;
     const userId = Number(req.session.userId);
     try {
         yield db_1.default
             .delete(schema_1.events)
-            .where((0, drizzle_orm_1.eq)(schema_1.events.id, eventId) && (0, drizzle_orm_1.eq)(schema_1.events.userId, userId))
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.events.id, eventId), (0, drizzle_orm_1.eq)(schema_1.events.userId, userId)))
             .returning();
         return res.status(200).json({ message: "Event successfully deleted" });
     }
     catch (err) {
-        console.error(`Error: attempting to delete event ${eventId}`);
-        return res.status(400).send({ message: err });
+        return res.status(400).send({ error: "Server error deleting event" });
     }
 }));
 exports.default = router;
