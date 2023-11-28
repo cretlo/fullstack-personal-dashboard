@@ -18,22 +18,33 @@ const express_1 = __importDefault(require("express"));
 // Routes
 const users_1 = __importDefault(require("./routes/users"));
 const auth_1 = __importDefault(require("./routes/auth"));
-const contacts_1 = __importDefault(require("./routes/contacts"));
+const todos_1 = __importDefault(require("./routes/todos"));
 const events_1 = __importDefault(require("./routes/events"));
 const notes_1 = __importDefault(require("./routes/notes"));
 //Middleware
 const cors_1 = __importDefault(require("cors"));
-// import cookieParser from "cookie-parser";
 const express_session_1 = __importDefault(require("express-session"));
+const connect_redis_1 = __importDefault(require("connect-redis"));
+const redis_1 = require("redis");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
+        // Redis client initialization
+        const redisClient = (0, redis_1.createClient)({
+            url: "redis://redis-store:6379",
+        });
+        redisClient.connect().catch(console.error);
+        const redisStore = new connect_redis_1.default({
+            client: redisClient,
+            prefix: "plannerapp:",
+        });
         const app = (0, express_1.default)();
         app.use((0, express_session_1.default)({
+            store: redisStore,
             secret: "test",
             resave: false,
             saveUninitialized: false,
             cookie: {
-                maxAge: 10000,
+                maxAge: 600000,
             },
         }));
         app.use(express_1.default.json());
@@ -43,7 +54,7 @@ function main() {
         }));
         app.use("/api/users", users_1.default);
         app.use("/api/auth", auth_1.default);
-        app.use("/api/contacts", contacts_1.default);
+        app.use("/api/todos", todos_1.default);
         app.use("/api/events", events_1.default);
         app.use("/api/notes", notes_1.default);
         app.listen(4000, () => {

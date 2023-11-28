@@ -29,30 +29,35 @@ export function validateUserSchema(
     }
 }
 
-const contactSchema = z.object({
-    email: z.string().optional(),
-    name: z.string().optional(),
-    phone: z.string().optional(),
+const todoSchema = z.object({
+    color: z.string().length(7),
+    desc: z.string(),
+    completed: z.boolean().optional(),
     userId: z.number(),
 });
 
-export function validateContactSchema(
+export function validateTodoSchema(
     req: Request,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const contactData = {
+        const todoData = {
             ...req.body,
             userId: req.session.userId,
         };
-        req.validatedContactData = contactSchema.parse(contactData);
+
+        req.validatedTodoData = todoSchema.parse(todoData);
+        console.log("todo to add: ", req.validatedTodoData);
         next();
     } catch (err) {
         if (err instanceof ZodError) {
-            res.status(400).json({ message: err.issues[0].message });
+            res.status(400).json({ message: err.flatten() });
         } else {
-            res.status(500).json({ message: "Something happened" });
+            console.error(err);
+            res.status(500).json({
+                message: "Something happened on the server",
+            });
         }
     }
 }

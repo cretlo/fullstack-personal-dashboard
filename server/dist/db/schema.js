@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.events = exports.notes = exports.contacts = exports.users = void 0;
+exports.events = exports.notes = exports.todos = exports.users = void 0;
 const pg_core_1 = require("drizzle-orm/pg-core");
 exports.users = (0, pg_core_1.pgTable)("users", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
@@ -8,14 +8,26 @@ exports.users = (0, pg_core_1.pgTable)("users", {
     email: (0, pg_core_1.varchar)("email", { length: 50 }).notNull(),
     password: (0, pg_core_1.varchar)("password", { length: 256 }).notNull(),
 });
-exports.contacts = (0, pg_core_1.pgTable)("contacts", {
+//export const contacts = pgTable("contacts", {
+//    id: serial("id").primaryKey(),
+//    name: varchar("name", { length: 256 }),
+//    phone: varchar("phone", { length: 256 }),
+//    email: varchar("email", { length: 256 }),
+//    userId: integer("user_id")
+//        .notNull()
+//        .references(() => users.id, {
+//            onDelete: "cascade",
+//        }),
+//});
+//
+//export type Contact = InferModel<typeof contacts, "select">;
+//export type NewContact = InferModel<typeof contacts, "insert">;
+exports.todos = (0, pg_core_1.pgTable)("todos", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
-    name: (0, pg_core_1.varchar)("name", { length: 256 }),
-    phone: (0, pg_core_1.varchar)("phone", { length: 256 }),
-    email: (0, pg_core_1.varchar)("email", { length: 256 }),
-    userId: (0, pg_core_1.integer)("user_id")
-        .notNull()
-        .references(() => exports.users.id, {
+    color: (0, pg_core_1.varchar)("color", { length: 7 }).notNull(),
+    desc: (0, pg_core_1.text)("desc"),
+    completed: (0, pg_core_1.boolean)("completed").default(false),
+    userId: (0, pg_core_1.integer)("user_id").references(() => exports.users.id, {
         onDelete: "cascade",
     }),
 });

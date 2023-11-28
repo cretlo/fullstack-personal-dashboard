@@ -2,13 +2,13 @@ version: '3'
 services:
   frontend:
     image: node:18-alpine
-    container_name: planner-frontend
     command: sh -c "npm run dev"
-    ports:
-      - 127.0.0.1:3000:5173 
+    container_name: planner-frontend
     working_dir: /app
+    ports:
+      - 3000:5173 
     volumes: 
-      - ./client/:/app 
+      - ./client/:/app/
     depends_on:
       - api
   api:
@@ -16,7 +16,8 @@ services:
     container_name: planner-api
     command: sh -c "npm run start"
     ports:
-      - 127.0.0.1:4000:4000
+      - 4000:4000
+      - 9229:9229
     working_dir: /api
     environment:
       - CONNECTION_URI_STRING=postgres://postgres:postgres@db:5432/planner
@@ -25,8 +26,18 @@ services:
       - ./server/:/api
     depends_on:
       - db
+  redis-store:
+    image: redis
+    container_name: redis-store
+    volumes:
+      - redis-store:/data
+    # Don't expose without a password, no password by default
+    # ports:
   db: 
     image: postgres
+    container_name: planner-db
+    expose:
+      - 5432
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: planner
@@ -36,3 +47,4 @@ services:
 
 volumes:
   my-pg-data:
+  redis-store:

@@ -30,7 +30,7 @@ const Notes = () => {
             .catch((err) => {
                 if (err instanceof AxiosError) {
                     if (err.response?.status === 401) {
-                        console.error(err.response?.data.message);
+                        return;
                     }
                 }
             });
@@ -43,19 +43,7 @@ const Notes = () => {
                 newNote,
             );
             setNotes([...notes, result.data]);
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                setAlert(err.response?.data.message, "danger");
-            }
-        }
-    }
-
-    async function deleteNote(id: number) {
-        try {
-            const result = await customAxios.delete(
-                `${import.meta.env.VITE_API_URL}/notes/${id}`,
-            );
-            setNotes(notes.filter((note) => note.id !== result.data.id));
+            setAlert("Note successfully added", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 setAlert(err.response?.data.message, "danger");
@@ -74,6 +62,21 @@ const Notes = () => {
                     note.id === result.data.id ? result.data : note,
                 ),
             );
+            setAlert("Note successfully updated", "success");
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                setAlert(err.response?.data.message, "danger");
+            }
+        }
+    }
+
+    async function deleteNote(id: number) {
+        try {
+            const result = await customAxios.delete(
+                `${import.meta.env.VITE_API_URL}/notes/${id}`,
+            );
+            setNotes(notes.filter((note) => note.id !== result.data.id));
+            setAlert("Note successfully deleted", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 setAlert(err.response?.data.message, "danger");

@@ -1,5 +1,5 @@
 import { CookieOptions } from "express";
-import { Contact, NewContact, NewEvent, NewNote } from "../db/schema";
+import { Todo, NewTodo, NewEvent, NewNote } from "../db/schema";
 import session from "express-session";
 
 declare module "express-session" {
@@ -21,7 +21,7 @@ declare global {
                 password: string;
             };
             validatedEventData: NewEvent;
-            validatedContactData: NewContact;
+            validatedTodoData: NewTodo;
             validatedNoteData: NewNote;
             user: {
                 id: number;

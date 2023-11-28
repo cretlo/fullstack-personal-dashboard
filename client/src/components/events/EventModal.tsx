@@ -65,6 +65,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
         if (isNewEvent) return;
 
         deleteEvent(event);
+        onClose();
     }
 
     function handleSubmit(e: FormEvent) {
@@ -151,15 +152,15 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                         Save
                     </button>
                     <button
-                        onClick={() => onClose()}
                         type="button"
+                        onClick={() => onClose()}
                         className="btn btn-secondary"
                     >
                         Close
                     </button>
                     <button
+                        type="button"
                         onClick={handleDelete}
-                        type="submit"
                         className="btn btn-danger"
                     >
                         Delete

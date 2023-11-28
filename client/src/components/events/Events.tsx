@@ -70,7 +70,7 @@ const Events = () => {
                     className="btn btn-primary py-2 "
                     onClick={handleAddButtonClick}
                 >
-                    Add Event
+                    Create Event
                 </button>
             </div>
             <ul
