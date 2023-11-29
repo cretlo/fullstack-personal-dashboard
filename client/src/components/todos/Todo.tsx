@@ -38,19 +38,6 @@ export default function Todo({ todo, updateTodo, deleteTodo }: Props) {
                     aria-label="Checkbox for completed todo"
                 />
             </div>
-            <input
-                type="span"
-                className="form-control"
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-            />
-            <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => deleteTodo(todo.id)}
-            >
-                Delete
-            </button>
             <div className="input-group-text p-0">
                 <input
                     type="color"
@@ -63,6 +50,20 @@ export default function Todo({ todo, updateTodo, deleteTodo }: Props) {
                     title="Choose your color"
                 />
             </div>
+            <input
+                type="span"
+                className="form-control"
+                value={desc}
+                disabled={todo.completed}
+                onChange={(e) => setDesc(e.target.value)}
+            />
+            <button
+                type="button"
+                className="btn btn-danger"
+                onClick={() => deleteTodo(todo.id)}
+            >
+                Delete
+            </button>
         </div>
     );
 }

@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useEventsContext } from "../../contexts/EventsContext";
 import EventModal from "./EventModal";
 import type { EventInput } from "@fullcalendar/core/index.js";
-// Utils
-//import sortRecentEvents from "../../utils/sortRecentEvents";
-import { getFullDateStr } from "../../utils/dateFormat";
 import { useAlertContext } from "../../contexts/AlertContext";
+// Utils
+import sortRecentEvents from "../../utils/sortRecentEvents";
+import { getFullDateStr } from "../../utils/dateFormat";
 
 const Events = () => {
     const { state, clearError } = useEventsContext();
@@ -23,8 +23,8 @@ const Events = () => {
     });
 
     // Events later than 2 days shouldn't be displayed
-    //const sortedEvents = sortRecentEvents(events);
-    const sortedEvents = events;
+    const sortedEvents = sortRecentEvents(events);
+    //const sortedEvents = events;
 
     useEffect(() => {
         if (error) {
