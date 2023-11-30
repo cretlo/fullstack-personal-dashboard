@@ -9,7 +9,7 @@ import bootstrap5 from "@fullcalendar/bootstrap5";
 import type {
     DateSelectArg,
     EventClickArg,
-    EventInput,
+    EventInput
     //  EventInput,
 } from "@fullcalendar/core/index.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
@@ -29,7 +29,7 @@ const EventCalendar = () => {
         start: "",
         end: "",
         description: "",
-        allDay: true,
+        allDay: true
     });
 
     useEffect(() => {
@@ -50,7 +50,7 @@ const EventCalendar = () => {
             description: "",
             start: "",
             end: "",
-            allDay: true,
+            allDay: true
         });
     }
 
@@ -73,7 +73,7 @@ const EventCalendar = () => {
 
         const currEvent = {
             ...calendarEvent,
-            ...extendedProps,
+            ...extendedProps
         };
         //
         // This is needed since fullcalendar converts the date to local time,
@@ -92,7 +92,7 @@ const EventCalendar = () => {
 
         setCurrEvent({
             ...currEvent,
-            ...extendedProps,
+            ...extendedProps
         });
         setIsNewEvent(false);
         handleShowModal();
@@ -106,7 +106,7 @@ const EventCalendar = () => {
             description: "",
             start,
             end,
-            allDay,
+            allDay
         };
 
         setCurrEvent(newEvent);
@@ -116,7 +116,7 @@ const EventCalendar = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="container-fluid container-lg">
                 <FullCalendar
                     //dateClick={handleSelect}
                     contentHeight={"auto"}

@@ -44,7 +44,7 @@ function main() {
             resave: false,
             saveUninitialized: false,
             cookie: {
-                maxAge: 600000,
+                maxAge: 6000000,
             },
         }));
         app.use(express_1.default.json());

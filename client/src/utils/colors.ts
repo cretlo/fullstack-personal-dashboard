@@ -2,7 +2,7 @@ import { TodoData } from "../types";
 
 export function initializeColorMap(todos: TodoData[]): Map<string, number> {
     const newColorMap = new Map<string, number>();
-    newColorMap.set("none", -1);
+    //newColorMap.set("none", -1);
 
     for (let i = 0; i < todos.length; i++) {
         const key = todos[i].color;

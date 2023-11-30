@@ -68,11 +68,18 @@ export default function Todos() {
             <AddTodo onAddTodo={handleAddTodo} loading={loading} />
             <p>Filter:</p>
             <div className="d-flex flex-wrap gap-2 mb-3">
+                <ColorButton
+                    color="#000000"
+                    selected={selected}
+                    isCancelBtn={true}
+                    setSelected={setSelected}
+                />
                 {[...colorMap.keys()].map((color) => {
                     return (
                         <ColorButton
                             key={color}
                             color={color}
+                            isCancelBtn={false}
                             selected={selected}
                             setSelected={setSelected}
                         />

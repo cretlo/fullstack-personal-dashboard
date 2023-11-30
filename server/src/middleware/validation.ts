@@ -48,7 +48,6 @@ export function validateTodoSchema(
         };
 
         req.validatedTodoData = todoSchema.parse(todoData);
-        console.log("todo to add: ", req.validatedTodoData);
         next();
     } catch (err) {
         if (err instanceof ZodError) {
@@ -75,6 +74,7 @@ const eventSchema = z.object({
         .transform((data) => (!data ? null : new Date(data))),
     description: z.string().optional(),
     allDay: z.boolean(),
+    userId: z.number(),
 });
 
 export function validateEventSchema(
@@ -86,6 +86,7 @@ export function validateEventSchema(
         const eventData = {
             ...req.body,
             id: req.params?.id,
+            userId: req.session.userId,
         };
 
         req.validatedEventData = eventSchema.parse(eventData);

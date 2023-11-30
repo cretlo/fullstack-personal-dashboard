@@ -11,9 +11,9 @@ export type NewContact = Omit<Contact, "id">;
 
 export interface Note {
     id: number;
-    title: string;
-    note: string;
-    editorState: string;
+    title?: string | undefined;
+    note?: string | undefined;
+    editorState?: string | undefined;
 }
 
 export interface AlertData {

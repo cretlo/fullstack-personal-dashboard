@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import type { Note as NoteType } from "../../types";
 import Note from "./Note";
-import { useAxiosContext } from "../../contexts/AxiosContext";
-import { AxiosError } from "axios";
 import { useAlertContext } from "../../contexts/AlertContext";
 
+import useNotesApi from "../../utils/api/useNotesApi";
+
 const Notes = () => {
-    const [notes, setNotes] = useState<NoteType[]>([]);
+    const { notes, loading, error, fetchNotes, postNote, putNote, deleteNote } =
+        useNotesApi();
     const [isNewNote, setIsNewNote] = useState(false);
-    const { customAxios } = useAxiosContext();
     const { setAlert } = useAlertContext();
     const emptyNote: NoteType = {
         id: -1,
@@ -18,70 +18,23 @@ const Notes = () => {
     };
 
     useEffect(() => {
-        customAxios
-            .get(`${import.meta.env.VITE_API_URL}/notes`)
-            .then((res) => {
-                if (!res) {
-                    throw new AxiosError("Error fetching all notes");
-                }
-
-                setNotes(res.data);
-            })
-            .catch((err) => {
-                if (err instanceof AxiosError) {
-                    if (err.response?.status === 401) {
-                        return;
-                    }
-                }
-            });
+        fetchNotes();
     }, []);
 
-    async function addNote(newNote: NoteType) {
-        try {
-            const result = await customAxios.post(
-                `${import.meta.env.VITE_API_URL}/notes`,
-                newNote,
-            );
-            setNotes([...notes, result.data]);
-            setAlert("Note successfully added", "success");
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                setAlert(err.response?.data.message, "danger");
-            }
-        }
+    if (error) {
+        setAlert(error, "danger");
     }
 
-    async function updateNote(newNote: NoteType) {
-        try {
-            const result = await customAxios.put(
-                `${import.meta.env.VITE_API_URL}/notes/${newNote.id}`,
-                newNote,
-            );
-            setNotes(
-                notes.map((note) =>
-                    note.id === result.data.id ? result.data : note,
-                ),
-            );
-            setAlert("Note successfully updated", "success");
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                setAlert(err.response?.data.message, "danger");
-            }
-        }
+    async function handleAddNote(newNote: NoteType) {
+        postNote(newNote);
     }
 
-    async function deleteNote(id: number) {
-        try {
-            const result = await customAxios.delete(
-                `${import.meta.env.VITE_API_URL}/notes/${id}`,
-            );
-            setNotes(notes.filter((note) => note.id !== result.data.id));
-            setAlert("Note successfully deleted", "success");
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                setAlert(err.response?.data.message, "danger");
-            }
-        }
+    async function handleUpdateNote(newNote: NoteType) {
+        putNote(newNote);
+    }
+
+    async function handleDeleteNote(id: number) {
+        deleteNote(id);
     }
 
     return (
@@ -91,8 +44,9 @@ const Notes = () => {
                 <button
                     className="list-group-item active sticky-top"
                     onClick={() => setIsNewNote(true)}
+                    disabled={loading}
                 >
-                    Create Note
+                    {loading ? "Loading..." : "Create Note"}
                 </button>
                 <div
                     className="position-relative overflow-scroll bg-warning"
@@ -105,9 +59,9 @@ const Notes = () => {
                                     key={note.id}
                                     isNewNote={false}
                                     initialNote={note}
-                                    updateNote={updateNote}
-                                    addNote={addNote}
-                                    deleteNote={deleteNote}
+                                    onUpdateNote={handleUpdateNote}
+                                    onAddNote={handleAddNote}
+                                    onDeleteNote={handleDeleteNote}
                                 />
                             );
                         })}
@@ -115,10 +69,10 @@ const Notes = () => {
                             <Note
                                 initialNote={emptyNote}
                                 isNewNote={isNewNote}
-                                updateNote={addNote}
-                                addNote={addNote}
-                                deleteNote={deleteNote}
-                                handleNewNote={setIsNewNote}
+                                onUpdateNote={handleAddNote}
+                                onAddNote={handleAddNote}
+                                onDeleteNote={handleDeleteNote}
+                                onNewNote={setIsNewNote}
                             />
                         )}
                     </div>

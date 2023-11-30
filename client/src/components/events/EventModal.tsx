@@ -82,11 +82,11 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
     return (
         <Modal show={show} onHide={onClose}>
             <Modal.Header>
-                {isNewEvent ? "Create Event" : "Edit Event"}
+                <h3>{isNewEvent ? "Create Event" : "Edit Event"}</h3>
             </Modal.Header>
             <form onSubmit={handleSubmit}>
                 <Modal.Body>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label className="form-label">Title</label>
                         <input
                             type="text"
@@ -97,7 +97,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label className="form-label">Description</label>
                         <input
                             type="text"
@@ -107,7 +107,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label className="form-label">
                             {event.allDay
                                 ? "Start Date"
@@ -126,7 +126,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label className="form-label">End Date</label>
                         <input
                             type="date"
@@ -136,7 +136,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="form-check mb-3">
+                    <div className="form-check mb-2">
                         <label className="form-check-label">All Day</label>
                         <input
                             type="checkbox"
@@ -147,7 +147,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                         />
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="justify-content-start">
                     <button type="submit" className="btn btn-primary">
                         Save
                     </button>
@@ -161,7 +161,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                     <button
                         type="button"
                         onClick={handleDelete}
-                        className="btn btn-danger"
+                        className="btn btn-danger ms-auto"
                     >
                         Delete
                     </button>

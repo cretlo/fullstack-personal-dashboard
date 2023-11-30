@@ -25,6 +25,7 @@ services:
     volumes:
       - ./server/:/api
     depends_on:
+      - redis-store
       - db
   redis-store:
     image: redis

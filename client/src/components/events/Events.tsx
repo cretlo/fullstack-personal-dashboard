@@ -87,7 +87,7 @@ const Events = () => {
                             onClick={() => handleChangeEvent(event)}
                         >
                             <div className="d-flex justify-content-between">
-                                <h4>{event.title}</h4>
+                                <h3 className="fs-5 fw-bold">{event.title}</h3>
                                 <small className="text-muted">
                                     {fullDateStr}
                                 </small>

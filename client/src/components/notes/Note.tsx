@@ -6,19 +6,19 @@ import NoteEditor from "./NoteEditor";
 interface Props {
     initialNote: NoteType;
     isNewNote: boolean;
-    addNote: (note: NoteType) => void;
-    updateNote: (note: NoteType) => void;
-    deleteNote: (id: number) => void;
-    handleNewNote?: (isNewNote: boolean) => void;
+    onAddNote: (note: NoteType) => void;
+    onUpdateNote: (note: NoteType) => void;
+    onDeleteNote: (id: number) => void;
+    onNewNote?: (isNewNote: boolean) => void;
 }
 
 const Note = ({
     initialNote,
     isNewNote,
-    handleNewNote,
-    addNote,
-    updateNote,
-    deleteNote,
+    onNewNote,
+    onAddNote,
+    onUpdateNote,
+    onDeleteNote,
 }: Props) => {
     const [show, setShow] = useState(isNewNote);
     const [note, setNote] = useState(initialNote);
@@ -31,8 +31,8 @@ const Note = ({
     function handleClose() {
         setShow(false);
 
-        if (isNewNote && handleNewNote) {
-            handleNewNote(false);
+        if (isNewNote && onNewNote) {
+            onNewNote(false);
         }
     }
 
@@ -48,9 +48,9 @@ const Note = ({
         }
 
         if (isNewNote) {
-            addNote(note);
+            onAddNote(note);
         } else {
-            updateNote(note);
+            onUpdateNote(note);
         }
 
         handleClose();
@@ -102,7 +102,7 @@ const Note = ({
                         <button
                             type="button"
                             className="btn btn-danger ms-auto"
-                            onClick={() => deleteNote(note.id)}
+                            onClick={() => onDeleteNote(note.id)}
                         >
                             Delete
                         </button>

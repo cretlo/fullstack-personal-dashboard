@@ -4,6 +4,7 @@ import { AxiosProvider } from "./contexts/AxiosContext";
 import { AlertProvider } from "./contexts/AlertContext";
 import Alerts from "./components/Alerts";
 
+import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -28,8 +29,9 @@ function App() {
                         <BrowserRouter>
                             <AppNavbar />
                             <Routes>
+                                <Route path="/" element={<Landing />} />
                                 <Route path="/" element={<PrivateRoute />}>
-                                    <Route path="/" element={<Home />} />
+                                    <Route path="home" element={<Home />} />
                                     <Route
                                         path="calendar"
                                         element={<EventCalendar />}

@@ -53,7 +53,6 @@ router.put("/:id", authorize, validateTodoSchema, async (req, res) => {
 
 router.delete("/:id", authorize, async (req, res) => {
     const todoId = Number(req.params.id);
-    console.log(todoId);
 
     if (!todoId) {
         return res.status(400).send({ message: "Must supply a todo id" });
