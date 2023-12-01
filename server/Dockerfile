@@ -1,17 +1,20 @@
 # Build stage
-FROM node:18-alpine as build
-WORKDIR /build 
-COPY package*.json ./
+FROM node:18-alpine as base
+WORKDIR /api
+EXPOSE 4000
+
+FROM base as dev
+ENV NODE_ENV=development
+COPY package*.json .
 RUN npm install
 COPY . .
-RUN npm run generate
-RUN npx tsc
+CMD npm run db:push && npm run start
 
-# Runtime stage
-FROM node:18-alpine
-WORKDIR /api
-COPY --from=build /build/package*.json ./
-COPY --from=build /build/dist ./dist
-COPY --from=build /build/drizzle ./drizzle
-RUN npm install --production
-CMD ["node", "./dist/index.js"]
+FROM base as prod
+ENV NODE_ENV=production
+COPY package*.json .
+RUN npm install 
+RUN npm run db:push
+COPY . .
+CMD npm run start
+

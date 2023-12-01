@@ -19,7 +19,7 @@ const Events = () => {
         start: "",
         end: "",
         description: "",
-        allDay: true,
+        allDay: true
     });
 
     // Events later than 2 days shouldn't be displayed
@@ -46,7 +46,7 @@ const Events = () => {
             start: "",
             end: "",
             description: "",
-            allDay: true,
+            allDay: true
         };
         setCurrEvent(newEvent);
         setIsNewEvent(true);
@@ -74,7 +74,7 @@ const Events = () => {
                 </button>
             </div>
             <ul
-                className="list-group overflow-scroll"
+                className="list-group overflow-auto"
                 style={{ maxHeight: "80vh" }}
             >
                 {sortedEvents.map((event) => {

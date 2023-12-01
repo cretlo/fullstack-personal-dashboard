@@ -43,7 +43,7 @@ function Landing() {
                         <h2 className="display-6 fw-medium mb-3">
                             Schedule Events
                         </h2>
-                        <div className="col d-flex align-items-center mb-3">
+                        <div className="col mt-5">
                             <p className="lead">
                                 Manage your upcoming events right from the
                                 comfort of your personal dashboard.
@@ -58,10 +58,10 @@ function Landing() {
                         </div>
                     </div>
                     <div className="row flex-row-reverse mb-5">
-                        <div className="col d-flex align-items-center mb-3">
+                        <div className="col mt-5">
                             <p className="lead">
-                                Use the calendar view for a higher level
-                                overview of your planned events.
+                                Use the calendar for a higher level overview of
+                                your planned events.
                             </p>
                         </div>
                         <div className="col-12 col-lg-6 d-flex justify-content-center align-items-center">
@@ -76,7 +76,7 @@ function Landing() {
                 <section className="mb-5">
                     <h2 className="display-6 fw-medium mb-3">Take Notes</h2>
                     <div className="row">
-                        <div className="col d-flex align-items-center mb-3">
+                        <div className="col mt-5">
                             <p className="lead">
                                 Create notes using the built in note editor for
                                 a more robust note taking experience.
@@ -94,11 +94,10 @@ function Landing() {
                 <section className="mb-5">
                     <h2 className="display-6 fw-medium mb-3">Manage To-Dos</h2>
                     <div className="row flex-row-reverse">
-                        <div className="col d-flex align-items-center mb-3">
+                        <div className="col mt-5">
                             <p className="lead">
                                 Utilize the consice to-do section, organizing
-                                what you need to do in color coordinated
-                                catagories.
+                                your to-dos in color coordinated catagories.
                             </p>
                         </div>
                         <div className="col-12 col-lg-6 d-flex justify-content-center align-items-center">

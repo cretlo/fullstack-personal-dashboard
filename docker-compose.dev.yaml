@@ -1,29 +1,37 @@
 version: '3'
 services:
   frontend:
-    image: node:18-alpine
-    command: sh -c "npm run dev"
+    #command: sh -c "npm run dev"
+    #working_dir: /app
+    #depends_on:
+    #  - api
+    #image: node:18-alpine
+    build: 
+      context: ./client
+      target: dev
     container_name: planner-frontend
-    working_dir: /app
     ports:
       - 3000:5173 
-    volumes: 
-      - ./client/:/app/
-    depends_on:
-      - api
+    #volumes: 
+      #- /app/node_modules
+      #- ./client/:/app/
   api:
-    image: node:18-alpine
+    #command: sh -c "npm run start"
+    #working_dir: /api
+    #image: node:18-alpine
+    build:
+      context: ./server
+      target: dev
     container_name: planner-api
-    command: sh -c "npm run start"
+    restart: always
     ports:
       - 4000:4000
       - 9229:9229
-    working_dir: /api
     environment:
       - CONNECTION_URI_STRING=postgres://postgres:postgres@db:5432/planner
-      - JWT_SECRET=development
-    volumes:
-      - ./server/:/api
+    #volumes:
+      #- /api/node_modules
+      #- ./server/:/api
     depends_on:
       - redis-store
       - db

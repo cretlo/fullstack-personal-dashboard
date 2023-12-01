@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { EventsContext } from "../contexts/EventsContext";
+import { useEffect, useState } from "react";
+//import { EventsContext } from "../contexts/EventsContext";
 import { useEventsContext } from "../contexts/EventsContext";
 // Full calendar
 import FullCalendar from "@fullcalendar/react";
@@ -17,7 +17,7 @@ import EventModal from "../components/events/EventModal";
 import { useAlertContext } from "../contexts/AlertContext";
 import dayjs from "dayjs";
 
-const EventCalendar = () => {
+export default function EventCalendar() {
     const { state, clearError } = useEventsContext();
     const { events, error } = state;
     const { setAlert } = useAlertContext();
@@ -141,6 +141,4 @@ const EventCalendar = () => {
             />
         </>
     );
-};
-
-export default EventCalendar;
+}

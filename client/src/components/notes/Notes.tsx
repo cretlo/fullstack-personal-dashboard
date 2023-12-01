@@ -14,7 +14,7 @@ const Notes = () => {
         id: -1,
         title: "Untitled",
         note: "",
-        editorState: "",
+        editorState: ""
     };
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const Notes = () => {
                     {loading ? "Loading..." : "Create Note"}
                 </button>
                 <div
-                    className="position-relative overflow-scroll bg-warning"
+                    className="position-relative overflow-auto bg-warning"
                     style={{ maxHeight: "80vh" }}
                 >
                     <div>
