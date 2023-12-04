@@ -1,24 +1,53 @@
 version: '3'
 
 services:
-  planner-api:
+  frontend:
+    container_name: planner-frontend
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - /app/node_modules
+    networks:
+      - my-network
+  api:
+    container_name: planner-api
     build:
-      context: ./server/
+      context: ./server
+      dockerfile: Dockerfile
     restart: always
-    ports: 
-      - 4000:4000
     env_file:
       - ./server/.env
     depends_on:
       - db
+    networks:
+      - my-network
+  redis-store:
+    image: redis
+    container_name: redis-store
+    volumes:
+      - redis-data:/data
+    networks:
+      - my-network
+    # Don't expose without a password, no password by default
+    # ports:
   db:
     image: postgres
     restart: always
     # Password is only non-option env var
-    # environment:
+    environment:
       # Must add Postgres_DB and POSTGRES_PASSWORD
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: planner
     volumes:
       - pg-data:/var/lib/postgresql/data
+    networks:
+      - my-network
 
 volumes:
   pg-data:
+  redis-data:
+networks:
+  my-network:
+    name: my-network
+    external: true

@@ -1,37 +1,29 @@
 version: '3'
 services:
   frontend:
-    #command: sh -c "npm run dev"
-    #working_dir: /app
-    #depends_on:
-    #  - api
-    #image: node:18-alpine
+    container_name: planner-frontend
     build: 
       context: ./client
-      target: dev
-    container_name: planner-frontend
+      dockerfile: Dockerfile.dev
     ports:
       - 3000:5173 
-    #volumes: 
-      #- /app/node_modules
-      #- ./client/:/app/
+    volumes: 
+      - /app/node_modules
+      - ./client/:/app/
   api:
-    #command: sh -c "npm run start"
-    #working_dir: /api
-    #image: node:18-alpine
+    container_name: planner-api
     build:
       context: ./server
-      target: dev
-    container_name: planner-api
+      dockerfile: Dockerfile.dev
     restart: always
     ports:
       - 4000:4000
       - 9229:9229
     environment:
       - CONNECTION_URI_STRING=postgres://postgres:postgres@db:5432/planner
-    #volumes:
-      #- /api/node_modules
-      #- ./server/:/api
+    volumes:
+      - /api/node_modules
+      - ./server/:/api/
     depends_on:
       - redis-store
       - db
@@ -39,12 +31,12 @@ services:
     image: redis
     container_name: redis-store
     volumes:
-      - redis-store:/data
+      - redis-data:/data
     # Don't expose without a password, no password by default
     # ports:
   db: 
     image: postgres
-    container_name: planner-db
+    container_name: pg-db
     expose:
       - 5432
     environment:
@@ -52,8 +44,8 @@ services:
       POSTGRES_DB: planner
     volumes:
       # my-pg-data is mapped to default pg path in the postgresql container (desc in postgres image docs)
-      - my-pg-data:/var/lib/postgresql/data 
+      - pg-data:/var/lib/postgresql/data 
 
 volumes:
-  my-pg-data:
-  redis-store:
+  pg-data:
+  redis-data:
