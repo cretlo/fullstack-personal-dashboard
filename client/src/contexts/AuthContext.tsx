@@ -19,7 +19,7 @@ export const useAuthContext = () => {
 
     if (!authContext) {
         throw new Error(
-            "useAuthContext has to be used within <AuthContext.Provider>",
+            "useAuthContext has to be used within <AuthContext.Provider>"
         );
     }
 
@@ -31,9 +31,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user: null,
         isAuthenticated: null,
         isLoading: true,
-        error: null,
+        error: null
     };
     const [state, dispatch] = useReducer(authReducer, initialState);
+    const baseUrl = import.meta.env.PROD
+        ? import.meta.env.VITE_API_URL
+        : "http://localhost:4000/api";
 
     useEffect(() => {
         const initialFetch = true;
@@ -43,22 +46,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Load user
     async function loadUser(initialFetch?: boolean) {
         try {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/auth`,
-                {
-                    withCredentials: true,
-                },
-            );
+            const res = await axios.get(`${baseUrl}/auth`, {
+                withCredentials: true
+            });
 
             dispatch({
                 type: "user_loaded",
-                payload: res.data,
+                payload: res.data
             });
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "auth_error",
-                    payload: initialFetch ? null : err.response?.data.message,
+                    payload: initialFetch ? null : err.response?.data.message
                 });
             }
         }
@@ -69,19 +69,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const config = {
             withCredentials: true,
             headers: {
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         };
 
         try {
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/users`,
-                formData,
-                config,
-            );
+            await axios.post(`${baseUrl}/users`, formData, config);
 
             dispatch({
-                type: "register_succeeded",
+                type: "register_succeeded"
             });
 
             loadUser();
@@ -89,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "register_failed",
-                    payload: err.response?.data.message,
+                    payload: err.response?.data.message
                 });
             }
         }
@@ -100,19 +96,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const config = {
             withCredentials: true,
             headers: {
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         };
 
         try {
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/auth`,
-                formData,
-                config,
-            );
+            await axios.post(`${baseUrl}/auth`, formData, config);
 
             dispatch({
-                type: "login_succeeded",
+                type: "login_succeeded"
             });
 
             loadUser();
@@ -120,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "login_failed",
-                    payload: err.response?.data.message,
+                    payload: err.response?.data.message
                 });
             }
         }
@@ -129,14 +121,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Logout user
     function logout() {
         dispatch({
-            type: "logout",
+            type: "logout"
         });
     }
 
     // Clear errors
     function clearErrors() {
         dispatch({
-            type: "clear_erros",
+            type: "clear_erros"
         });
     }
 
@@ -148,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 clearErrors,
                 login,
                 loadUser,
-                logout,
+                logout
             }}
         >
             {!state.isLoading && children}

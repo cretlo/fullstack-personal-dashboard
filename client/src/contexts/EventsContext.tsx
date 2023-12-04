@@ -22,7 +22,7 @@ export const useEventsContext = () => {
     const context = useContext(EventsContext);
     if (!context) {
         throw new Error(
-            "EventsContext must be used within an EventsContextProvider",
+            "EventsContext must be used within an EventsContextProvider"
         );
     }
     return context;
@@ -31,17 +31,12 @@ export const useEventsContext = () => {
 export function EventsProvider({ children }: { children: React.ReactNode }) {
     const initialState: EventsState = {
         events: [],
-        error: null,
+        error: null
     };
 
     const [state, dispatch] = useReducer(eventsReducer, initialState);
     const { customAxios } = useAxiosContext();
     const { setAlert } = useAlertContext();
-    const baseApiUrl = import.meta.env.VITE_API_URL;
-
-    if (!baseApiUrl) {
-        throw new Error("Must provide vite with api url environment variable");
-    }
 
     useEffect(() => {
         fetchEvents();
@@ -49,7 +44,7 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
     async function fetchEvents() {
         try {
-            let res = await customAxios.get(`${baseApiUrl}/events`);
+            let res = await customAxios.get(`/events`);
 
             if (!res) {
                 throw new AxiosError("Error fetching all events");
@@ -57,13 +52,13 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
             dispatch({
                 type: "fetched",
-                payload: res.data,
+                payload: res.data
             });
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "errored",
-                    payload: err?.response?.data.message,
+                    payload: err?.response?.data.message
                 });
             } else {
                 console.error(err);
@@ -73,18 +68,18 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
     async function addEvent(event: EventInput) {
         try {
-            const res = await customAxios.post(`${baseApiUrl}/events`, event);
+            const res = await customAxios.post(`/events`, event);
 
             dispatch({
                 type: "added",
-                payload: res.data,
+                payload: res.data
             });
             setAlert("Event successfully added", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "errored",
-                    payload: err?.response?.data.message,
+                    payload: err?.response?.data.message
                 });
             } else {
                 console.error(err);
@@ -94,21 +89,18 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
     async function updateEvent(event: EventInput) {
         try {
-            const res = await customAxios.put(
-                `${baseApiUrl}/events/${event.id}`,
-                event,
-            );
+            const res = await customAxios.put(`/events/${event.id}`, event);
 
             dispatch({
                 type: "updated",
-                payload: res.data,
+                payload: res.data
             });
             setAlert("Event successfully updated", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "errored",
-                    payload: err?.response?.data.message,
+                    payload: err?.response?.data.message
                 });
             } else {
                 console.error(err);
@@ -118,18 +110,18 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
     async function deleteEvent(event: EventInput) {
         try {
-            await customAxios.delete(`${baseApiUrl}/events/${event.id}`);
+            await customAxios.delete(`/events/${event.id}`);
 
             dispatch({
                 type: "deleted",
-                payload: event,
+                payload: event
             });
             setAlert("Event successfully deleted", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
                     type: "errored",
-                    payload: err?.response?.data.message,
+                    payload: err?.response?.data.message
                 });
             } else {
                 console.error(err);
@@ -139,7 +131,7 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
     function clearError() {
         dispatch({
-            type: "clear_error",
+            type: "clear_error"
         });
     }
 
@@ -149,7 +141,7 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
         addEvent,
         updateEvent,
         deleteEvent,
-        clearError,
+        clearError
     };
 
     return (

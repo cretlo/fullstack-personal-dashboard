@@ -22,7 +22,7 @@ const FilteredContact = () => {
         id: -1,
         name: "",
         phone: "",
-        email: "",
+        email: ""
     });
     const [isNewContact, setIsNewContact] = useState(false);
     const [show, setShow] = useState(false);
@@ -62,9 +62,7 @@ const FilteredContact = () => {
 
     useEffect(() => {
         async function fetchContacts() {
-            const res = await customAxios.get(
-                `${import.meta.env.VITE_API_URL}/contacts`,
-            );
+            const res = await customAxios.get(`/contacts`);
             return res.data;
         }
 
@@ -76,13 +74,13 @@ const FilteredContact = () => {
     async function updateContact(updatedContact: ContactType) {
         try {
             const res = await customAxios.put(
-                `${import.meta.env.VITE_API_URL}/contacts/${updatedContact.id}`,
-                updatedContact,
+                `/contacts/${updatedContact.id}`,
+                updatedContact
             );
             setContacts(
                 contacts.map((contact) =>
-                    contact.id === res.data.id ? res.data : contact,
-                ),
+                    contact.id === res.data.id ? res.data : contact
+                )
             );
         } catch (err) {
             console.error(err);
@@ -91,10 +89,7 @@ const FilteredContact = () => {
 
     async function addContact(newContact: NewContact) {
         try {
-            const res = await customAxios.post(
-                `${import.meta.env.VITE_API_URL}/contacts`,
-                newContact,
-            );
+            const res = await customAxios.post(`/contacts`, newContact);
             setContacts([...contacts, res.data]);
         } catch (err) {
             if (err instanceof AxiosError) {
@@ -107,11 +102,9 @@ const FilteredContact = () => {
 
     async function deleteContact(id: number) {
         try {
-            const res = await customAxios.delete(
-                `${import.meta.env.VITE_API_URL}/contacts/${id}`,
-            );
+            const res = await customAxios.delete(`/contacts/${id}`);
             setContacts(
-                contacts.filter((contact) => contact.id !== res.data.id),
+                contacts.filter((contact) => contact.id !== res.data.id)
             );
         } catch (err) {
             console.error(err);
@@ -133,7 +126,7 @@ const FilteredContact = () => {
             id: -1,
             name: "",
             phone: "",
-            email: "",
+            email: ""
         };
         showModal(newContact);
         setIsNewContact(true);

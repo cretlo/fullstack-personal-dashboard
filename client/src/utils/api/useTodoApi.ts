@@ -7,25 +7,22 @@ const todoSchema = z.object({
     id: z.number(),
     color: z.string().length(7),
     desc: z.string(),
-    completed: z.boolean(),
+    completed: z.boolean()
 });
 
 type Todo = z.infer<typeof todoSchema>;
-
-const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const useTodoApi = () => {
     const [todos, setData] = useState<Todo[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { customAxios } = useAxiosContext();
-    const todosUrl = `${baseUrl}/todos`;
 
     async function fetchTodos() {
         try {
             setLoading(true);
 
-            const response = await customAxios.get(todosUrl);
+            const response = await customAxios.get("/todos");
 
             const data = response.data;
 
@@ -45,10 +42,7 @@ const useTodoApi = () => {
         try {
             setLoading(true);
 
-            const response = await customAxios.post(
-                `${baseUrl}/todos`,
-                newTodo,
-            );
+            const response = await customAxios.post(`/todos`, newTodo);
             const data = response.data;
 
             const todo = todoSchema.parse(data);
@@ -71,8 +65,8 @@ const useTodoApi = () => {
             setLoading(true);
 
             const response = await customAxios.put(
-                `${baseUrl}/todos/${todoToUpdate.id}`,
-                todoToUpdate,
+                `/todos/${todoToUpdate.id}`,
+                todoToUpdate
             );
             const data = response.data;
 
@@ -85,7 +79,7 @@ const useTodoApi = () => {
                     }
 
                     return updatedTodo;
-                }),
+                })
             );
 
             return updatedTodo;
@@ -103,12 +97,12 @@ const useTodoApi = () => {
     async function deleteTodo(id: number) {
         try {
             setLoading(true);
-            await customAxios.delete(`${baseUrl}/todos/${id}`);
+            await customAxios.delete(`/todos/${id}`);
 
             setData(
                 todos.filter((todo) => {
                     return todo.id !== id;
-                }),
+                })
             );
 
             return true;

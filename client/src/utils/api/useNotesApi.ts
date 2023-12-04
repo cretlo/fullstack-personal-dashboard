@@ -7,25 +7,22 @@ const notesSchema = z.object({
     id: z.number(),
     title: z.string().optional(),
     note: z.string().optional(),
-    editorState: z.string().optional(),
+    editorState: z.string().optional()
 });
 
 type Note = z.infer<typeof notesSchema>;
-
-const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const useNotesApi = () => {
     const [notes, setData] = useState<Note[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { customAxios } = useAxiosContext();
-    const notesUrl = `${baseUrl}/notes`;
 
     async function fetchNotes() {
         try {
             setLoading(true);
 
-            const response = await customAxios.get(notesUrl);
+            const response = await customAxios.get("/notes");
 
             const data = response.data;
 
@@ -45,10 +42,7 @@ const useNotesApi = () => {
         try {
             setLoading(true);
 
-            const response = await customAxios.post(
-                `${baseUrl}/notes`,
-                newTodo,
-            );
+            const response = await customAxios.post(`/notes`, newTodo);
             const data = response.data;
 
             const note = notesSchema.parse(data);
@@ -71,8 +65,8 @@ const useNotesApi = () => {
             setLoading(true);
 
             const response = await customAxios.put(
-                `${baseUrl}/notes/${noteToUpdate.id}`,
-                noteToUpdate,
+                `/notes/${noteToUpdate.id}`,
+                noteToUpdate
             );
             const data = response.data;
 
@@ -85,7 +79,7 @@ const useNotesApi = () => {
                     }
 
                     return updatedNote;
-                }),
+                })
             );
 
             return updatedNote;
@@ -103,12 +97,12 @@ const useNotesApi = () => {
     async function deleteNote(id: number) {
         try {
             setLoading(true);
-            await customAxios.delete(`${baseUrl}/notes/${id}`);
+            await customAxios.delete(`/notes/${id}`);
 
             setData(
                 notes.filter((note) => {
                     return note.id !== id;
-                }),
+                })
             );
 
             return true;
@@ -130,7 +124,7 @@ const useNotesApi = () => {
         fetchNotes,
         postNote,
         putNote,
-        deleteNote,
+        deleteNote
     };
 };
 

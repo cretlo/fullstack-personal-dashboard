@@ -21,6 +21,13 @@ export const AxiosProvider = ({ children }: Props) => {
 
     const customAxios = axios.create();
 
+    customAxios.defaults.baseURL =
+        import.meta.env.MODE === "production"
+            ? import.meta.env.VITE_API_URL
+            : "http://localhost:4000/api";
+
+    //customAxios.defaults.withCredentials = true;
+
     customAxios.interceptors.response.use(
         (res) => res,
         (error) => {
@@ -34,7 +41,7 @@ export const AxiosProvider = ({ children }: Props) => {
             }
 
             return Promise.reject(error);
-        },
+        }
     );
 
     // Needed to allow requests with credentials
@@ -45,7 +52,7 @@ export const AxiosProvider = ({ children }: Props) => {
         },
         (error) => {
             return Promise.reject(error);
-        },
+        }
     );
 
     return <Provider value={{ customAxios }}>{children}</Provider>;
@@ -56,7 +63,7 @@ export const useAxiosContext = () => {
 
     if (!axiosContext) {
         throw new Error(
-            "useAxiosContext has to be used within <AxiosContext.Provider>",
+            "useAxiosContext has to be used within <AxiosContext.Provider>"
         );
     }
 
