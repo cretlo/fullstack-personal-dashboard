@@ -8,20 +8,6 @@ exports.users = (0, pg_core_1.pgTable)("users", {
     email: (0, pg_core_1.varchar)("email", { length: 50 }).notNull(),
     password: (0, pg_core_1.varchar)("password", { length: 256 }).notNull(),
 });
-//export const contacts = pgTable("contacts", {
-//    id: serial("id").primaryKey(),
-//    name: varchar("name", { length: 256 }),
-//    phone: varchar("phone", { length: 256 }),
-//    email: varchar("email", { length: 256 }),
-//    userId: integer("user_id")
-//        .notNull()
-//        .references(() => users.id, {
-//            onDelete: "cascade",
-//        }),
-//});
-//
-//export type Contact = InferModel<typeof contacts, "select">;
-//export type NewContact = InferModel<typeof contacts, "insert">;
 exports.todos = (0, pg_core_1.pgTable)("todos", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
     color: (0, pg_core_1.varchar)("color", { length: 7 }).notNull(),

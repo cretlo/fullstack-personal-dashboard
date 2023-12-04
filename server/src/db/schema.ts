@@ -17,21 +17,6 @@ export const users = pgTable("users", {
     password: varchar("password", { length: 256 }).notNull(),
 });
 
-//export const contacts = pgTable("contacts", {
-//    id: serial("id").primaryKey(),
-//    name: varchar("name", { length: 256 }),
-//    phone: varchar("phone", { length: 256 }),
-//    email: varchar("email", { length: 256 }),
-//    userId: integer("user_id")
-//        .notNull()
-//        .references(() => users.id, {
-//            onDelete: "cascade",
-//        }),
-//});
-//
-//export type Contact = InferModel<typeof contacts, "select">;
-//export type NewContact = InferModel<typeof contacts, "insert">;
-
 export const todos = pgTable("todos", {
     id: serial("id").primaryKey(),
     color: varchar("color", { length: 7 }).notNull(),

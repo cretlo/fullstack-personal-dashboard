@@ -4,7 +4,6 @@ import db from "../db/db";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { authorize } from "../middleware/authorize";
 import { validateAuthSchema } from "../middleware/validation";
 
@@ -65,10 +64,6 @@ router.post("/", validateAuthSchema, async (req, res) => {
 
 // Logout user
 router.delete("/", (req, res) => {
-    //res.clearCookie("token", {
-    //    httpOnly: true,
-    //    maxAge: res.locals.cookieExpiration,
-    //});
     req.session.destroy((err) => {
         if (err) {
             console.error(err);

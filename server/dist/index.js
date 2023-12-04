@@ -26,6 +26,15 @@ const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const redis_1 = require("redis");
+// Production environment variable guards
+if (process.env.NODE_ENV === "production") {
+    if (!process.env.SESS_SECRET) {
+        throw new Error("Must supply SESS_SECRET env variable");
+    }
+    if (!process.env.DB_URI) {
+        throw new Error("Must supply DB_URI env variable");
+    }
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // Redis client initialization
@@ -40,7 +49,7 @@ function main() {
         const app = (0, express_1.default)();
         app.use((0, express_session_1.default)({
             store: redisStore,
-            secret: "test",
+            secret: process.env.SESS_SECRET || "",
             resave: false,
             saveUninitialized: false,
             cookie: {

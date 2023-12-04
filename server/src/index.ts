@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
 import express from "express";
 // Routes
@@ -14,6 +13,17 @@ import cors from "cors";
 import session from "express-session";
 import RedisStore from "connect-redis";
 import { createClient } from "redis";
+
+// Production environment variable guards
+if (process.env.NODE_ENV === "production") {
+    if (!process.env.SESS_SECRET) {
+        throw new Error("Must supply SESS_SECRET env variable");
+    }
+
+    if (!process.env.DB_URI) {
+        throw new Error("Must supply DB_URI env variable");
+    }
+}
 
 async function main() {
     // Redis client initialization
@@ -32,11 +42,11 @@ async function main() {
     app.use(
         session({
             store: redisStore,
-            secret: "test",
+            secret: process.env.SESS_SECRET || "",
             resave: false,
             saveUninitialized: false,
             cookie: {
-                maxAge: 6000000,
+                maxAge: 1000 * 60 * 60,
             },
         }),
     );
@@ -44,7 +54,7 @@ async function main() {
     app.use(express.json());
     app.use(
         cors({
-            origin: "http://localhost:3000",
+            origin: ["http://localhost:3000", "*"],
             credentials: true,
         }),
     );

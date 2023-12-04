@@ -1,20 +1,11 @@
-# Build stage
-FROM node:18-alpine as base
+FROM node:18-alpine as build
 WORKDIR /api
-EXPOSE 4000
 
-FROM base as dev
-ENV NODE_ENV=development
+FROM build as prod
 COPY package*.json .
-RUN npm install
-COPY . .
-CMD npm run db:push && npm run start
-
-FROM base as prod
+RUN npm ci
 ENV NODE_ENV=production
-COPY package*.json .
-RUN npm install 
-RUN npm run db:push
 COPY . .
-CMD npm run start
+RUN npm run build
+CMD npm run db:push && node ./dist/index.js
 

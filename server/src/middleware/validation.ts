@@ -7,9 +7,6 @@ const userSchema = z.object({
     password: z.string().min(6),
 });
 
-/*
- * Users middleware
- */
 export function validateUserSchema(
     req: Request,
     res: Response,
@@ -61,13 +58,10 @@ export function validateTodoSchema(
     }
 }
 
-// TODO: Ensure end gets coerced to null instead of undefined
-
 const eventSchema = z.object({
     id: z.string().optional(),
     title: z.string(),
     start: z.coerce.date(),
-    //end: z.coerce.date().optional(),
     end: z
         .string()
         .nullable()
@@ -111,8 +105,6 @@ export function validateDeleteEvent(
 ) {
     try {
         req.params.id = deleteEventSchema.parse(req.params.id);
-        console.log(req.params.id);
-        console.log(typeof req.params.id);
         next();
     } catch (err) {
         if (err instanceof ZodError) {
@@ -153,9 +145,6 @@ export function validateNoteSchema(
     }
 }
 
-/*
- * Login middleware
- */
 const authSchema = z.object({
     username: z.string().nonempty(),
     password: z.string().min(6),
