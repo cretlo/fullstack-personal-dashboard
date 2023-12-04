@@ -6,27 +6,19 @@ import { useAlertContext } from "../../contexts/AlertContext";
 import ColorButton from "./ColorButton";
 
 // Utils
-import {
-    initializeColorMap,
-    addColorToMap,
-    deleteFromColorMap,
-    updateColorMap,
-} from "../../utils/colors";
+import { createColorSet } from "../../utils/colors";
 import useTodoApi from "../../utils/api/useTodoApi";
 
 export default function Todos() {
     const { todos, loading, error, fetchTodos, postTodo, putTodo, deleteTodo } =
         useTodoApi();
-    const [colorMap, setColorMap] = useState(initializeColorMap(todos));
     const [selected, setSelected] = useState("none");
     const { setAlert } = useAlertContext();
 
+    const colorSet = createColorSet(todos);
+
     useEffect(() => {
-        fetchTodos().then((fetchedTodos) => {
-            if (fetchedTodos) {
-                setColorMap(initializeColorMap(fetchedTodos));
-            }
-        });
+        fetchTodos();
     }, []);
 
     if (error) {
@@ -38,28 +30,16 @@ export default function Todos() {
             ? todos.filter((todo) => todo.color === selected)
             : todos;
 
-    async function handleAddTodo(todo: TodoData) {
-        const newTodo = await postTodo(todo);
-
-        if (newTodo) {
-            setColorMap(addColorToMap(colorMap, newTodo.color));
-        }
+    function handleAddTodo(todo: TodoData) {
+        postTodo(todo);
     }
 
-    async function handleUpdateTodo(todo: TodoData) {
-        const updatedTodo = await putTodo(todo);
-
-        if (updatedTodo) {
-            setColorMap(updateColorMap(colorMap, todos, updatedTodo));
-        }
+    function handleUpdateTodo(todo: TodoData) {
+        putTodo(todo);
     }
 
-    async function handleDeleteTodo(id: number) {
-        const isDeleted = await deleteTodo(id);
-
-        if (isDeleted) {
-            setColorMap(deleteFromColorMap(colorMap, todos, id));
-        }
+    function handleDeleteTodo(id: number) {
+        deleteTodo(id);
     }
 
     return (
@@ -74,7 +54,7 @@ export default function Todos() {
                     isCancelBtn={true}
                     setSelected={setSelected}
                 />
-                {[...colorMap.keys()].map((color) => {
+                {[...colorSet.keys()].map((color) => {
                     return (
                         <ColorButton
                             key={color}

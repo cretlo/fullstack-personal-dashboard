@@ -29,8 +29,6 @@ const useTodoApi = () => {
             const todos = z.array(todoSchema).parse(data);
 
             setData(todos);
-
-            return todos;
         } catch (error: any) {
             setError(error);
         } finally {
@@ -48,7 +46,6 @@ const useTodoApi = () => {
             const todo = todoSchema.parse(data);
 
             setData([...todos, todo]);
-            return todo;
         } catch (err) {
             if (err instanceof AxiosError) {
                 setError(err.response?.data.message);
@@ -81,8 +78,6 @@ const useTodoApi = () => {
                     return updatedTodo;
                 })
             );
-
-            return updatedTodo;
         } catch (err) {
             if (err instanceof AxiosError) {
                 setError(err.response?.data.message);
@@ -104,8 +99,6 @@ const useTodoApi = () => {
                     return todo.id !== id;
                 })
             );
-
-            return true;
         } catch (err) {
             if (err instanceof AxiosError) {
                 setError(err.response?.data.message);
