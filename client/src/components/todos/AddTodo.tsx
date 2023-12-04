@@ -1,14 +1,21 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { TodoData } from "../../types";
 
 interface Props {
     onAddTodo: (todo: TodoData) => void;
     loading: boolean;
+    selected: string;
 }
 
-function AddTodo({ onAddTodo, loading }: Props) {
+function AddTodo({ onAddTodo, loading, selected }: Props) {
     const [desc, setDesc] = useState("");
     const [color, setColor] = useState("#563d7c");
+
+    useEffect(() => {
+        if (selected !== "none") {
+            setColor(selected);
+        }
+    }, [selected]);
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -17,7 +24,7 @@ function AddTodo({ onAddTodo, loading }: Props) {
             id: -1,
             color,
             desc: desc,
-            completed: false,
+            completed: false
         });
         setDesc("");
     }
@@ -46,7 +53,7 @@ function AddTodo({ onAddTodo, loading }: Props) {
                     disabled={loading}
                     className="btn btn-primary"
                 >
-                    {loading ? "Loading..." : "Add ToDo"}
+                    {loading ? "Loading..." : "Add To-Do"}
                 </button>
             </div>
         </form>

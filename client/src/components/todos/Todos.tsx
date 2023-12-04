@@ -44,8 +44,12 @@ export default function Todos() {
 
     return (
         <>
-            <h2 className="mb-3">ToDos</h2>
-            <AddTodo onAddTodo={handleAddTodo} loading={loading} />
+            <h2 className="mb-3">To-Dos</h2>
+            <AddTodo
+                onAddTodo={handleAddTodo}
+                loading={loading}
+                selected={selected}
+            />
             <p>Filter:</p>
             <div className="d-flex flex-wrap gap-2 mb-3">
                 <ColorButton
