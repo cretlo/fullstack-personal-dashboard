@@ -12,8 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+require("dotenv/config");
 const express_1 = __importDefault(require("express"));
 // Routes
 const users_1 = __importDefault(require("./routes/users"));
@@ -53,12 +52,12 @@ function main() {
             resave: false,
             saveUninitialized: false,
             cookie: {
-                maxAge: 6000000,
+                maxAge: 1000 * 60 * 60,
             },
         }));
         app.use(express_1.default.json());
         app.use((0, cors_1.default)({
-            origin: "http://localhost:3000",
+            origin: ["http://localhost:3000", "*"],
             credentials: true,
         }));
         app.use("/api/users", users_1.default);

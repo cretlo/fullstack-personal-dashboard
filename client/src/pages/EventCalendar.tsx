@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-//import { EventsContext } from "../contexts/EventsContext";
 import { useEventsContext } from "../contexts/EventsContext";
 // Full calendar
 import FullCalendar from "@fullcalendar/react";
@@ -10,7 +9,6 @@ import type {
     DateSelectArg,
     EventClickArg,
     EventInput
-    //  EventInput,
 } from "@fullcalendar/core/index.js";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import EventModal from "../components/events/EventModal";
@@ -122,6 +120,7 @@ export default function EventCalendar() {
                     contentHeight={"auto"}
                     events={events}
                     selectable={true}
+                    longPressDelay={0}
                     editable={true}
                     eventClick={handleClick}
                     themeSystem="bootstrap5"
