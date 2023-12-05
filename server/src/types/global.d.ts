@@ -13,7 +13,6 @@ declare global {
         interface Request {
             validatedUserData: {
                 username: string;
-                email: string;
                 password: string;
             };
             validatedAuthData: {

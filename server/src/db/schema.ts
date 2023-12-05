@@ -13,7 +13,6 @@ import { InferModel } from "drizzle-orm";
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
     username: varchar("username", { length: 30 }).notNull(),
-    email: varchar("email", { length: 50 }).notNull(),
     password: varchar("password", { length: 256 }).notNull(),
 });
 

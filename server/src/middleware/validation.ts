@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 
 const userSchema = z.object({
     username: z.string().nonempty(),
-    email: z.string().email(),
     password: z.string().min(6),
 });
 
