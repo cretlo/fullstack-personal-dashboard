@@ -24,7 +24,6 @@ const Events = () => {
 
     // Events later than 2 days shouldn't be displayed
     const sortedEvents = sortRecentEvents(events);
-    //const sortedEvents = events;
 
     useEffect(() => {
         if (error) {
@@ -63,7 +62,6 @@ const Events = () => {
 
     return (
         <>
-            <h2 className="mb-3">Upcoming Events</h2>
             <div className="d-grid mb-3">
                 <button
                     type="button"

@@ -29,7 +29,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
             case "title": {
                 setEvent({
                     ...event,
-                    title: e.currentTarget.value,
+                    title: e.currentTarget.value
                 });
                 return;
             }
@@ -43,14 +43,14 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
                     // Clear button pressed
                     setEvent({
                         ...event,
-                        [inputName]: "",
+                        [inputName]: ""
                     });
                     return;
                 }
 
                 setEvent({
                     ...event,
-                    [inputName]: dayjs(e.currentTarget.value).toISOString(),
+                    [inputName]: dayjs(e.currentTarget.value).toISOString()
                 });
                 return;
             }
@@ -80,7 +80,7 @@ const EventModal = ({ event, setEvent, isNewEvent, show, onClose }: Props) => {
     }
 
     return (
-        <Modal show={show} onHide={onClose}>
+        <Modal show={show} onHide={onClose} centered>
             <Modal.Header>
                 <h3>{isNewEvent ? "Create Event" : "Edit Event"}</h3>
             </Modal.Header>

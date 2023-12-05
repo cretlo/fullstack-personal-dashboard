@@ -44,7 +44,6 @@ export default function Todos() {
 
     return (
         <>
-            <h2 className="mb-3">To-Dos</h2>
             <AddTodo
                 onAddTodo={handleAddTodo}
                 loading={loading}
@@ -70,7 +69,7 @@ export default function Todos() {
                     );
                 })}
             </div>
-            <ul className="list-group list-group-flush">
+            <ul className="list-group list-group-flush todo-list">
                 {filteredTodos.map((todo) => {
                     return (
                         <li key={todo.id} className="list-group-item px-0">

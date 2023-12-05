@@ -10,7 +10,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import EventCalendar from "./pages/EventCalendar";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
+import "./scss/main.scss";
 import AppNavbar from "./components/AppNavbar";
 import PrivateRoute from "./components/PrivateRoute";
 

@@ -5,8 +5,6 @@ import { useAxiosContext } from "./AxiosContext";
 import { AxiosError } from "axios";
 import type { EventsState } from "../types";
 
-import { useAlertContext } from "./AlertContext";
-
 interface ContextValue {
     state: EventsState;
     fetchEvents: () => Promise<void>;
@@ -36,7 +34,6 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
 
     const [state, dispatch] = useReducer(eventsReducer, initialState);
     const { customAxios } = useAxiosContext();
-    const { setAlert } = useAlertContext();
 
     useEffect(() => {
         fetchEvents();
@@ -74,7 +71,6 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
                 type: "added",
                 payload: res.data
             });
-            setAlert("Event successfully added", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
@@ -95,7 +91,6 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
                 type: "updated",
                 payload: res.data
             });
-            setAlert("Event successfully updated", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({
@@ -116,7 +111,6 @@ export function EventsProvider({ children }: { children: React.ReactNode }) {
                 type: "deleted",
                 payload: event
             });
-            setAlert("Event successfully deleted", "success");
         } catch (err) {
             if (err instanceof AxiosError) {
                 dispatch({

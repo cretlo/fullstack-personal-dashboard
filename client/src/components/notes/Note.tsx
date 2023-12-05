@@ -18,7 +18,7 @@ const Note = ({
     onNewNote,
     onAddNote,
     onUpdateNote,
-    onDeleteNote,
+    onDeleteNote
 }: Props) => {
     const [show, setShow] = useState(isNewNote);
     const [note, setNote] = useState(initialNote);
@@ -70,7 +70,7 @@ const Note = ({
                 {displayedTitle}
             </button>
 
-            <Modal size="lg" show={show} backdrop="static">
+            <Modal size="lg" show={show} backdrop="static" centered>
                 <Modal.Header>
                     <input
                         className="form-control"

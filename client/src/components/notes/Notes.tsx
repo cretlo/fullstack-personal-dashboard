@@ -39,7 +39,6 @@ const Notes = () => {
 
     return (
         <>
-            <h2 className="mb-3">Notes</h2>
             <div className="list-group">
                 <button
                     className="list-group-item active sticky-top"
