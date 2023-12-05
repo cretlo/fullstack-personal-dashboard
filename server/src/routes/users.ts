@@ -14,7 +14,7 @@ const router = express.Router();
  * @desc      Register a user
  * @access    Public */
 router.post("/", validateUserSchema, async (req, res) => {
-    const { username, email, password } = req.validatedUserData;
+    const { username, password } = req.validatedUserData;
 
     try {
         const queriedUsers: User[] = await db
@@ -29,7 +29,6 @@ router.post("/", validateUserSchema, async (req, res) => {
 
         const newUser: NewUser = {
             username,
-            email,
             password,
         };
 
