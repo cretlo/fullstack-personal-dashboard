@@ -1,13 +1,15 @@
 version: '3'
 
 services:
-  frontend:
-    container_name: planner-frontend
+  web:
+    container_name: planner-web
     build: 
       context: ./client
       dockerfile: Dockerfile
-    volumes:
-      - /app/node_modules
+      args:
+        - VITE_API_URL=${VITE_API_URL} 
+    ports:
+      - 3000:80
     networks:
       - my-network
   api:
@@ -16,8 +18,11 @@ services:
       context: ./server
       dockerfile: Dockerfile
     restart: always
-    env_file:
-      - ./server/.env
+    environment:
+      DB_URI: ${DB_URI} 
+      SESS_SECRET: ${SESS_SECRET}
+    ports:
+      - 4000:4000
     depends_on:
       - db
     networks:
@@ -33,6 +38,7 @@ services:
     # ports:
   db:
     image: postgres
+    container_name: db
     restart: always
     # Password is only non-option env var
     environment:
@@ -46,7 +52,9 @@ services:
 
 volumes:
   pg-data:
+    name: pg-data
   redis-data:
+    name: redis-data
 networks:
   my-network:
     name: my-network

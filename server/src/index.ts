@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 import express from "express";
 // Routes
 import users from "./routes/users";
@@ -54,7 +52,7 @@ async function main() {
     app.use(express.json());
     app.use(
         cors({
-            origin: ["http://localhost:3000", "*"],
+            origin: "http://localhost:3000",
             credentials: true,
         }),
     );

@@ -10,6 +10,8 @@ services:
     volumes: 
       - /app/node_modules
       - ./client/:/app/
+    environment:
+      VITE_API_URL: ${VITE_API_URL} 
   api:
     container_name: planner-api
     build:
@@ -20,7 +22,8 @@ services:
       - 4000:4000
       - 9229:9229
     environment:
-      - CONNECTION_URI_STRING=postgres://postgres:postgres@db:5432/planner
+      DB_URI: ${DB_URI} 
+      SESS_SECRET: ${SESS_SECRET}
     volumes:
       - /api/node_modules
       - ./server/:/api/
